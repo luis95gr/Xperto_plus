@@ -1,0 +1,233 @@
+<resources>
+    <string name="tApp" translatable="false">Driving Monitor</string>
+    <string name="tNombre">Nombre</string>
+    <string name="tPrimerNombre">Primer Nombre</string>
+    <string name="tApellido">Apellido</string>
+    <string name="tRepiteCorreo">Confirma tu correo</string>
+    <string name="tRepiteContra">Confirma tu contraseña</string>
+    <string name="tCelularNumero">Número de celular</string>
+    <string name="tCelularNom">Celular</string>
+    <string name="tGenero">Género</string>
+    <string name="tMujer">Mujer</string>
+    <string name="tHombre">Hombre</string>
+    <string name="tPeso">Peso</string>
+    <string name="tPesoInfo">Peso en kg</string>
+    <string name="tAltura">Altura</string>
+    <string name="tAlturaInfo">Altura en cm</string>
+    <string name="tFechaNac">Fecha de Nacimiento</string>
+    <string name="tAceptarTerminos">Aceptar términos y condiciones</string>
+    <string name="tPais">País</string>
+    <string name="tTerminar">Terminar</string>
+
+
+    <!-- spinner dias  -->
+    <string-array name="day">
+        <item>Day</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+    </string-array>
+    <!-- -->
+
+    <!-- spinner ejercicio -->
+    <string-array name="ejercicio">
+        <item>Exercise</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+    </string-array>
+
+    <!-- spinner meses  -->
+    <string-array name="month">
+        <item>Month</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+
+    </string-array>
+
+    <!-- spinner años  -->
+    <string-array name="year">
+        <item>Year</item>
+        <item>1960</item>
+        <item>1961</item>
+        <item>1962</item>
+        <item>1963</item>
+        <item>1964</item>
+        <item>1965</item>
+        <item>1966</item>
+        <item>1967</item>
+        <item>1968</item>
+        <item>1969</item>
+        <item>1970</item>
+        <item>1971</item>
+        <item>1972</item>
+        <item>1973</item>
+        <item>1974</item>
+        <item>1975</item>
+        <item>1976</item>
+        <item>1977</item>
+        <item>1978</item>
+        <item>1979</item>
+        <item>1980</item>
+        <item>1981</item>
+        <item>1982</item>
+        <item>1983</item>
+        <item>1984</item>
+        <item>1985</item>
+        <item>1986</item>
+        <item>1987</item>
+        <item>1988</item>
+        <item>1989</item>
+        <item>1990</item>
+        <item>1991</item>
+        <item>1992</item>
+        <item>1993</item>
+        <item>1994</item>
+        <item>1995</item>
+        <item>1996</item>
+        <item>1997</item>
+        <item>1998</item>
+        <item>1999</item>
+        <item>2000</item>
+    </string-array>
+
+    <!-- spinner paises  -->
+    <string-array name="country">
+        <item>Country</item>
+        <item>Mexico</item>
+        <item>Estados Unidos</item>
+        <item>Switzerland</item>
+        <item>Canada</item>
+        <item>Alemania</item>
+        <item>Reino Unido</item>
+        <item>Japon</item>
+        <item>France</item>
+        <item>Holanda</item>
+        <item>Dinamarca</item>
+        <item>Nueva Zelanda</item>
+        <item>Finlandia</item>
+        <item>Italia</item>
+        <item>España</item>
+        <item>China</item>
+        <item>India</item>
+        <item>Brasil</item>
+        <item>Israel</item>
+    </string-array>
+    <string name="tTituloCrearCuenta">Crear Cuenta</string>
+    <string name="tituloPrincipal">Principal</string>
+    <string name="tituloPerfil">Perfil</string>
+    <string name="tituloEstadisticas">Estadísticas</string>
+    <string name="subPrincipal">Aquí puedes empezar a manejar</string>
+    <string name="subPerfil">Verifica tu información personal</string>
+    <string name="subEstadisticas">Revisa la información de tus viajes</string>
+    <string name="tBienvenido">Bienvenido</string>
+    <string name="tAcercaNosotros">Acerca de nosotros</string>
+    <string name="tCerrarSesion">Cerrar sesión</string>
+    <string name="tManejar">Manejar</string>
+    <string name="tTuUltimoViaje">Estos son los resultados \n de tu último viaje</string>
+    <string name="tDuracion">Duración</string>
+    <string name="tFecha">Fecha</string>
+    <string name="tVelocidad">Velocidad promedio</string>
+    <string name="tFatiga">Fatiga</string>
+    <string name="tEjercicio">Condición física</string>
+    <string name="tTrabajador">ID Conductor</string>
+    <string name="tConductorInfo">Ingresa tu ID de Conductor</string>
+    <string name="tCargando">Cargando...</string>
+    <string name="tituloConexion">Conexión Helo</string>
+    <string name="tEstadoConexion">Estado de conexión</string>
+    <string name="tEstadoEnlace">Estado de enlance</string>
+    <string name="tConexionDesconectado">Desconectado</string>
+    <string name="tEnlaceDesenlazado">Desenlazado</string>
+    <string name="tMac">Dirección Mac</string>
+    <string name="tConexionMac">No disponible</string>
+    <string name="tBatería">Batería</string>
+    <string name="rationale_title">Necesita permisos</string>
+    <string name="rationale_message">Necesita permisos, por favor habilitarlos</string>
+    <string name="tConectarBle">¿Quieres conectarte a este dispositivo bluetooth?</string>
+    <string name="Si">Si</string>
+    <string name="No" translatable="false">No</string>
+    <string name="PermisoConcedido">Permiso Concedido</string>
+    <string name="Conectado">Conectado</string>
+    <string name="Enlazado">Enlazado</string>
+    <string name="Ubicacion">Tu ubicación esta deshabilitada, por favor habilitala</string>
+    <string name="UbicacionMensaje">La muestra del conector necesita una ubicación para encenderse. Por favor habilite la ubicación.</string>
+    <string name="bluetoothNo">Este dispositivo no cuenta con bluetooth</string>
+    <string name="bluetoothOff">Bluetooth apagado</string>
+    <string name="DispositivoNoEncontrado">Dispositivo emparejado no encontrado</string>
+    <string name="GPSenciende">Por favor enciende tu GPS</string>
+    <string name="PermisoDenegado">Permiso denegado</string>
+    <string name="Escaneando">Escaneando...</string>
+    <string name="Escanear">Escanear</string>
+    <string name="Desconectar">Desconectar</string>
+    <string name="Registrando">Registrando...</string>
+    <string name="ComenzarManejar">Comenzar a \n manejar</string>
+    <string name="DispositivoNoConectado">Dispositivo no conectado</string>
+    <string name="tituloConducir">Conducción</string>
+    <string name="Midiendo">Midiendo:</string>
+    <string name="UltimaMedicion">Última medición:</string>
+    <string name="Iniciar">Iniciar</string>
+    <string name="Terminar">Terminar</string>
+    <string name="Pausar">Pausar</string>
+    <string name="Reanudar">Reanudar</string>
+    <string name="Presión">"Presión: "</string>
+    <string name="Respiración">Respiración:</string>
+    <string name="Fatiga">Fatiga:</string>
+    <string name="Animo">Ánimo:</string>
+    <string name="Ritmo">Ritmo:</string>
+    <string name="RitmoSin">Ritmo</string>
+    <string name="PresionSin">Presión</string>
+    <string name="FatigaSin">Fatiga y ánimo</string>
+    <string name="AnimoSin">Ánimo</string>
+    <string name="RespiracionSin">Respiración</string>
+    <string name="InfoPersonal">Información personal</string>
+    <string name="Edad">Edad</string>
+    <string name="Años">" años"</string>
+    <string name="InfoAdicional">Información adicional</string>
+    <string name="DispositivoDesconectado">La banda se ha desconectado, por favor vuelve a conectarla</string>
+    <string name="CambiarDatos">Para modificar los datos, contacte a su administrador.</string>
+    <string name="ActivarSonido">Activar sonido</string>
+    <string name="title_activity_conduccion">" "</string>
+    <string name="SonidoActivado">Sonido activado</string>
+    <string name="SonidoDesactivado">Sonido desactivado</string>
+    <string name="Encontrado">Encontrado</string>
+</resources>

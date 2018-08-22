@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Helo.conexionHeloBluetooth"
+    android:background="@color/background"
+    android:id="@+id/conexionBlue">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/personal">
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        />
+    <com.dragankrstic.autotypetextview.AutoTypeTextView
+        app:animateTextTypeWithoutMistakes="@string/tituloConexion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
+        android:textSize="25sp"
+        />
+
+    <!--      1°        -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/linearConn"
+        android:layout_marginTop="15dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/textConn_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/grey"
+            android:text="@string/tEstadoConexion" />
+
+        <TextView
+            android:id="@+id/conn_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="@string/tConexionDesconectado" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/linea"
+        android:layout_width="match_parent"
+        android:layout_marginTop="7dp"
+        android:layout_height="1dip"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/linearConn"/>
+
+    <!--      2°        -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/linearBond"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linea">
+
+        <TextView
+            android:id="@+id/textBond_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textColor="@color/grey"
+            android:textAlignment="center"
+            android:text="@string/tEstadoEnlace" />
+
+        <TextView
+            android:id="@+id/bond_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="@string/tEnlaceDesenlazado" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/linea2"
+        android:layout_width="match_parent"
+        android:layout_marginTop="7dp"
+        android:layout_height="1dip"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/linearBond"/>
+
+    <!--      3°        -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:id="@+id/linearMac"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linea2">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:textSize="16sp"
+            android:textColor="@color/grey"
+            android:textAlignment="center"
+            android:text="@string/tMac" />
+
+        <TextView
+            android:id="@+id/mac"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="@string/tConexionMac" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/linea3"
+        android:layout_width="match_parent"
+        android:layout_marginTop="7dp"
+        android:layout_height="1dip"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/linearMac"/>
+
+    <!--      4°        -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:id="@+id/linearBattery"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linea3">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:textColor="@color/grey"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:text="@string/tBatería" />
+
+        <TextView
+            android:id="@+id/battery"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="@string/tConexionMac" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/linea6"
+        android:layout_width="match_parent"
+        android:layout_marginTop="7dp"
+        android:layout_height="1dip"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/linearBattery"/>
+
+    <!--Botones    -->
+
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linea6"
+        style="?android:attr/buttonBarStyle"
+
+        >
+
+        <Button
+            android:id="@+id/scan"
+            android:layout_margin="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="34"
+            android:onClick="scan"
+            android:backgroundTint="@color/white"
+            android:text="@string/Escanear"
+            android:background="@drawable/round_border"
+            />
+
+        <Button
+            android:id="@+id/unpair"
+            android:layout_margin="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="32"
+            android:textColor="@color/black"
+            android:onClick="unpair"
+            android:backgroundTint="@color/white"
+            android:text="@string/Desconectar"
+            android:background="@drawable/round_border"
+            />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:indeterminate="true"
+        android:max="100"
+        android:indeterminateTint="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttons"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/textScanning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="17sp"
+        android:text="@string/Escaneando"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttons"
+        android:visibility="invisible"
+        />
+
+    <Button
+        android:id="@+id/buttonEmpezar"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_border3"
+        android:backgroundTint="@color/md_red_A200"
+        android:text="@string/ComenzarManejar"
+        android:textColor="@color/white"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        android:onClick="comenzar"
+        />
+
+
+
+
+</android.support.constraint.ConstraintLayout>

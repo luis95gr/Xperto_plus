@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Helo.PinActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pin Verification"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/holo_blue_light"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lbl"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/holo_blue_light"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/code"
+        android:hint="Enter code"
+        android:inputType="textEmailAddress"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/verify"
+        android:text="Verify"
+        android:onClick="onClick"/>
+
+</LinearLayout>

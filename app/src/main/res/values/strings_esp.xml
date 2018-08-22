@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name" translatable="false">xperto</string>
+    <string name="tCorreo">Correo electrónico</string>
+    <string name="tContraseña">Contraseña</string>
+    <string name="tIniciarSesion">Iniciar sesión</string>
+    <string name="tCrearCuenta">Crear cuenta</string>
+</resources>

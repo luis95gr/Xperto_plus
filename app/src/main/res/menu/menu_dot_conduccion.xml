@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/sonidoA"
+        android:title="@string/ActivarSonido" />
+    <item
+        android:id="@+id/acercaNos"
+        android:title="@string/tAcercaNosotros" />
+</menu>

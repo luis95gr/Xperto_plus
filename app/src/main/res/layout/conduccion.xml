@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:backgroundTint="@color/background"
+    android:id="@+id/conduccionL">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/background">
+
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/personal">
+    </Toolbar>
+
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        />
+    <com.dragankrstic.autotypetextview.AutoTypeTextView
+        app:animateTextTypeWithoutMistakes="@string/tituloConducir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="@id/toolbar"
+        />
+
+        <TextView
+            android:id="@+id/textBle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tConexionDesconectado"
+            android:textColor="@color/md_red_500"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            />
+
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+
+            android:textColor="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/txtDis"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="0 km/hr"
+            android:textSize="30sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map"
+    android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="3"
+    tools:context=".conduccion"
+    />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:background="@color/background">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:max="100"
+            android:backgroundTint="@color/white"
+            android:indeterminate="false"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            />
+
+        <LinearLayout
+            android:id="@+id/linearMediciones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/progressBar"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <!-- Midiendo -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Midiendo"
+                    android:textColor="@color/white"
+                    android:textAlignment="viewEnd"
+                    android:layout_weight="1"
+                    android:textSize="22sp"
+                    />
+                <TextView
+                    android:id="@+id/textMidiendo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <!-- Ultima medicion -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/UltimaMedicion"
+                    android:textColor="@color/white"
+                    android:textAlignment="viewEnd"
+                    android:layout_weight="1"
+                    android:textSize="22sp"
+                    />
+                <TextView
+                    android:id="@+id/textUltimaMedicion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+            <!-- INICAR-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearIniciar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/linearMediciones"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <!-- BOTON INICIAR-->
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Iniciar"
+                android:textSize="22sp"
+                android:padding="10dp"
+                android:paddingStart="50dp"
+                android:paddingEnd="50dp"
+                android:textColor="@color/white"
+                android:background="@drawable/round_border2"
+                android:onClick="iniciar"/>
+        </LinearLayout>
+
+        <!-- BOTONES PAUSAR O TERMINAR-->
+        <LinearLayout
+            android:id="@+id/linearPausar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/linearMediciones"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+            style="?android:attr/buttonBarButtonStyle"
+            android:visibility="invisible">
+
+            <!-- BOTON TERMINAR-->
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/Terminar"
+                android:gravity="center_horizontal"
+                android:textSize="22sp"
+                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/white"
+                android:background="@drawable/round_border_rojo"
+                android:layout_marginEnd="15dp"
+                android:onClick="terminar"/>
+
+            <!-- BOTON PAUSAR-->
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/Pausar"
+                android:textSize="22sp"
+                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/white"
+                android:background="@drawable/round_border_amarillo"
+                android:layout_marginStart="15dp"
+                android:onClick="pausar"/>
+        </LinearLayout>
+
+        <!-- BOTONES REANUDAR O TERMINAR-->
+
+        <LinearLayout
+            android:id="@+id/linearReanudar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/linearMediciones"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="horizontal"
+            style="?android:attr/buttonBarButtonStyle"
+            android:visibility="invisible">
+
+            <!-- BOTON TERMINAR-->
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/Terminar"
+                android:gravity="center_horizontal"
+                android:textSize="22sp"
+                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/white"
+                android:background="@drawable/round_border_rojo"
+                android:layout_marginEnd="15dp"
+                android:onClick="terminar"/>
+
+            <!-- BOTON REANUDAR-->
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/Reanudar"
+                android:textSize="22sp"
+                android:padding="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/white"
+                android:background="@drawable/round_border_verde"
+                android:layout_marginStart="15dp"
+                android:onClick="reanudar"/>
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

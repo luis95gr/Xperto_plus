@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('android-connector-20180322.aar'))
