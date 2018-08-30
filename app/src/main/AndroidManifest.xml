@@ -25,7 +25,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name=".GlobalVars"
@@ -84,7 +84,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".profile"></activity>
+        <activity android:name=".profile" />
+
+        <service android:name=".serviceInternet" />
+
+        <activity android:name=".PopUp"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.CustomTheme"
+            >
+        </activity>
     </application>
 
 </manifest>

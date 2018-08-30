@@ -99,4 +99,12 @@
     <string name="SonidoDesactivado">Sound desactivated</string>
     <string name="Encontrado">Found</string>
     <string name="title_activity_conduccion">" "</string>
+    <string name="DatosViaje">Travel information</string>
+    <string name="Duracion">Duration</string>
+    <string name="VelocProm">Mean speed</string>
+    <string name="RitmoP">Mean heart rate</string>
+    <string name="ResPromedio">Mean breath rate</string>
+    <string name="PresionPro">Mean pressure</string>
+    <string name="FatigaPro">Mean fatigue</string>
+    <string name="MoodPro">Mean mood</string>
 </resources>

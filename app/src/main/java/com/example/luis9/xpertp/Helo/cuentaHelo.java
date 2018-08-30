@@ -21,6 +21,7 @@ public class cuentaHelo extends AppCompatActivity {
     String key = "152384277176254522";
     String token = "B9B2E74B829AC1FCE45FFF44BE772CE8C5DD2200";
     Handler handler;
+    boolean aBooleanisLoggedIn = false;
     int width,height;
     //
 
@@ -32,7 +33,8 @@ public class cuentaHelo extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (Connector.getInstance().isLoggedIn()){
+                aBooleanisLoggedIn = Connector.getInstance().isLoggedIn();
+                if (aBooleanisLoggedIn){
                     startActivity(new Intent( cuentaHelo.this, conexionHeloBluetooth.class));
                 }
                 //

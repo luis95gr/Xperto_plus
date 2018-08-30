@@ -230,4 +230,12 @@
     <string name="SonidoActivado">Sonido activado</string>
     <string name="SonidoDesactivado">Sonido desactivado</string>
     <string name="Encontrado">Encontrado</string>
+    <string name="DatosViaje">Información del viaje</string>
+    <string name="Duracion">Duración</string>
+    <string name="VelocProm">Velocidad promedio</string>
+    <string name="RitmoP">Ritmo promedio</string>
+    <string name="ResPromedio">Respiración promedio</string>
+    <string name="PresionPro">Presión promedio</string>
+    <string name="FatigaPro">Fatiga promedio</string>
+    <string name="MoodPro">Ánimo promedio</string>
 </resources>

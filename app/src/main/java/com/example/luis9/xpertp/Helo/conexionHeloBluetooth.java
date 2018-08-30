@@ -18,6 +18,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -238,8 +239,14 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
 
     @Override
     public void onScanStarted() {
-        progressBar.setVisibility(View.VISIBLE);
-        textScanning.setVisibility(View.VISIBLE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+                textScanning.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     @Override
@@ -262,7 +269,6 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
 
     //
     public class MeasurementReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, final Intent intent) {
             if (intent != null && intent.getAction() != null) {
@@ -306,7 +312,9 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
                             conn_status.setTextColor(Color.GREEN);
                             mac.setText(intent.getStringExtra(INTENT_KEY_MAC));
                             mac.setTextColor(Color.GREEN);
-                            comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#43cd80")));
+                            progressBar.setVisibility(View.INVISIBLE);
+                            textScanning.setVisibility(View.INVISIBLE);
+                            //comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#43cd80")));
                             SharedPreferences.Editor spConnectionHeloEditor = spConnectionHelo.edit();
                             spConnectionHeloEditor.putString("mac",mac.getText().toString());
                             spConnectionHeloEditor.putBoolean("connected",true);
@@ -320,6 +328,9 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            textScanning.setVisibility(View.INVISIBLE);
+                            comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#43cd80")));
                             bond_status.setText(R.string.Enlazado);
                             bond_status.setTextColor(Color.GREEN);
                         }
@@ -328,6 +339,7 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF9A9A")));
                             bond_status.setText(R.string.tEnlaceDesenlazado);
                             bond_status.setTextColor(Color.WHITE);
                         }
@@ -351,7 +363,7 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
     }
 
     public void comenzar(View view){
-        if (!conn_status.getText().toString().equals("Conectado")){
+        if (!bond_status.getText().toString().equalsIgnoreCase("enlazado")){
            Snackbar snackbar = Snackbar.make(findViewById(R.id.conexionBlue), R.string.DispositivoNoConectado, Snackbar.LENGTH_LONG);
             snackbar.show();
         } else {
