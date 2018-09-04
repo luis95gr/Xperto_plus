@@ -236,6 +236,14 @@
     <string name="RitmoP">Ritmo promedio</string>
     <string name="ResPromedio">Respiración promedio</string>
     <string name="PresionPro">Presión promedio</string>
-    <string name="FatigaPro">Fatiga promedio</string>
-    <string name="MoodPro">Ánimo promedio</string>
+    <string name="FatigaPro">Fatigado</string>
+    <string name="MoodPro">Deprimido</string>
+    <string name="ListoManejar">Listo para manejar</string>
+    <string name="FalloConexion">Fallo conexión</string>
+    <string name="Esperando">Esperando...</string>
+    <string name="tituloDiagnostico">Diagnóstico rápido</string>
+    <string name="Valor">Valor</string>
+    <string name="Diagnostico">Diagnóstico</string>
+    <string name="Resultados">Resultados</string>
+    <string name="Instrucciones">Instrucciones</string>
 </resources>

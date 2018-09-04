@@ -1,4 +1,4 @@
-package com.example.luis9.xpertp;
+package com.example.luis9.xperto_plus;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;

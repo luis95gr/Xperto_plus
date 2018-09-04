@@ -1,9 +1,8 @@
-package com.example.luis9.xpertp;
+package com.example.luis9.xperto_plus;
 
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -20,7 +19,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -28,21 +26,15 @@ import android.os.SystemClock;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,7 +47,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.luis9.xpertp.Helo.conexionHeloBluetooth;
+import com.example.luis9.xpertp.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -77,7 +69,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.Timer;
 
 public class conduccion extends FragmentActivity implements OnMapReadyCallback,TextToSpeech.OnInitListener, ScanCallBack {
 
@@ -142,37 +133,36 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback,T
     //FINALIZAR VIAJE VARIABLES
     ArrayList<Integer> intPBr,intPHr,intPBpmax,intPBpmin;
     int elementBr,elementHr,elementBpmax,elementBpmin = 0;
+    String elementFatiga,elementMood;
     ArrayList<String> stringPFatigue,stringPMood;
     ArrayList<Double> doublePSpeed;
     double elementSpeed = 0;
     StringTokenizer stringTokenizer;
     String tokenH,tokenM,tokenS,tiempo;
-    double promedioBr,promedioHr,promedioBpmax,promedioBpmin,promedioSpeed;
-    int contadorFatigaCansado,contadorFatigaNormal,contadorFatigaMuyCansado,contadorMoodEmocionado,contadorMoodDeprimido,contadorMoodCalmado;
-    Iterator<Integer> iteratorBr,iteratorHr,iteratorBpmax,iteratorBpmin;
-    Iterator<String> iteratorFatiga,iteratorMood;
-    Iterator<Double> iteratorSpeed;
+    double promedioBr,promedioHr,promedioBpmax,promedioBpmin;
+    int contadorFatigaCansado,contadorFatigaNormal,contadorFatigaMuyCansado,contadorMoodEmocionado,
+            contadorMoodDeprimido,contadorMoodCalmado,promedioSpeed;
 
     //
-    public final String BROADCAST_ACTION_BP_MEASUREMENT = "com.worldgn.connector.BP_MEASUREMENT";
-    public final String BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE = "com.worldgn.connector.MEASURE_WRITE_FAILURE";
-    public final String BROADCAST_ACTION_HR_MEASUREMENT = "com.worldgn.connector.HR_MEASUREMENT";
-    public final String BROADCAST_ACTION_BR_MEASUREMENT = "com.worldgn.connector.BR_MEASUREMENT";
-    public final String BROADCAST_ACTION_FATIGUE_MEASUREMENT = "com.worldgn.connector.FATIGUE_MEASUREMENT";
-    public final String BROADCAST_ACTION_MOOD_MEASUREMENT = "com.worldgn.connector.MOOD_MEASUREMENT";
-    public final String BROADCAST_ACTION_STEPS_MEASUREMENT = "com.worldgn.connector.STEPS_MEASUREMENT";
-    public final String BROADCAST_ACTION_HELO_DISCONNECTED = "com.worldgn.connector.ACTION_HELO_DISCONNECTED";
-    public final String BROADCAST_ACTION_HELO_CONNECTED = "com.worldgn.connector.ACTION_HELO_CONNECTED";
-    public final String BROADCAST_ACTION_HELO_BONDED = "com.worldgn.connector.ACTION_HELO_BONDED";
+    public final String BROADCAST_ACTION_BP_MEASUREMENT = "com.worldgn.w22.ble.BluetoothLeService.ACTION_MAIN_DATA_BP";
+    public static final String BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE = "com.worldgn.connector_plus.MEASURE_WRITE_FAILURE";
+    public static final String BROADCAST_ACTION_HR_MEASUREMENT = "com.worldgn.connector_plus.HR_MEASUREMENT";
+    public static final String BROADCAST_ACTION_BR_MEASUREMENT = "com.worldgn.connector_plus.BR_MEASUREMENT";
+    public static final String BROADCAST_ACTION_FATIGUE_MEASUREMENT = "com.worldgn.connector_plus.FATIGUE_MEASUREMENT";
+    public static final String BROADCAST_ACTION_MOOD_MEASUREMENT = "com.worldgn.connector_plus.MOOD_MEASUREMENT";
+    public static final String BROADCAST_ACTION_STEPS_MEASUREMENT = "com.worldgn.connector_plus.STEPS_MEASUREMENT";
+    public static final String BROADCAST_ACTION_HELO_DISCONNECTED = "com.worldgn.connector_plus.ACTION_HELO_DISCONNECTED";
+    public static final String BROADCAST_ACTION_HELO_CONNECTED = "com.worldgn.connector_plus.ACTION_HELO_CONNECTED";
+    public static final String BROADCAST_ACTION_HELO_BONDED = "com.worldgn.connector_plus.ACTION_HELO_BONDED";
     //
-    public final String INTENT_KEY_HR_MEASUREMENT = "HR_MEASUREMENT";
-    public final String INTENT_KEY_BR_MEASUREMENT = "BR_MEASUREMENT";
-    public final String INTENT_KEY_BP_MEASUREMENT_MAX = "BP_MEASUREMENT_MAX";
-    public final String INTENT_KEY_BP_MEASUREMENT_MIN = "BP_MEASUREMENT_MIN";
-    public final String INTENT_KEY_MOOD_MEASUREMENT = "MOOD_MEASUREMENT";
-    public final String INTENT_KEY_FATIGUE_MEASUREMENT = "FATIGUE_MEASUREMENT";
-    public final String INTENT_MEASUREMENT_WRITE_FAILURE = "MEASUREMENT_WRITE_FAILURE";
-    public  final String INTENT_KEY_STEPS_MEASUREMENT = "STEPS_MEASUREMENT";
+    public static final String INTENT_KEY_HR_MEASUREMENT = "HR_MEASUREMENT";
+    public static final String INTENT_KEY_BR_MEASUREMENT = "BR_MEASUREMENT";
+    public static final String INTENT_KEY_BP_MEASUREMENT_MAX = "BP_MEASUREMENT_MAX";
+    public static final String INTENT_KEY_BP_MEASUREMENT_MIN = "BP_MEASUREMENT_MIN";
+    public static final String INTENT_KEY_MOOD_MEASUREMENT = "MOOD_MEASUREMENT";
+    public static final String INTENT_KEY_FATIGUE_MEASUREMENT = "FATIGUE_MEASUREMENT";
+    public static final String INTENT_MEASUREMENT_WRITE_FAILURE = "MEASUREMENT_WRITE_FAILURE";
+    public static final String INTENT_KEY_STEPS_MEASUREMENT = "STEPS_MEASUREMENT";
     //
 
     @Override
@@ -214,13 +204,6 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback,T
         stringPFatigue = new ArrayList<>();
         stringPMood = new ArrayList<>();
         doublePSpeed = new ArrayList<>();
-        iteratorHr = intPHr.iterator();
-        iteratorBpmax = intPBpmax.iterator();
-        iteratorBpmin = intPBpmin.iterator();
-        iteratorBr = intPBr.iterator();
-        iteratorMood = stringPMood.iterator();
-        iteratorFatiga = stringPFatigue.iterator();
-        iteratorSpeed = doublePSpeed.iterator();
         //COUNTDOWN CAST
         //HANDLERS CAST
         handlerBp = new Handler();
@@ -346,24 +329,97 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback,T
                 "&var=" + "FIN" + "&valor=" + "FIN" + "&fecha=" + dates() + "&hora=" + hour() + "&velocidad=" + "FIN"
                 + "&diagnostico=" +"FIN");
         //TIEMPO
-        /*stringTokenizer = new StringTokenizer(chronometer.getText().toString(),":");
-        tokenH = stringTokenizer.nextToken();
-        tokenM = stringTokenizer.nextToken();
-        tokenS = stringTokenizer.nextToken();*/
         tiempo = chronometer.getText().toString();
         //PROMEDIOS
+        //VELOC
         if (!doublePSpeed.isEmpty()){
+            Iterator<Double> iteratorSpeed = doublePSpeed.iterator();
             while (iteratorSpeed.hasNext()){
                 elementSpeed += iteratorSpeed.next();
             }
             if (elementSpeed == 0){
                 promedioSpeed = 0;
-            } else promedioSpeed = elementSpeed / doublePSpeed.size();
-        }
+            } else promedioSpeed = (int) elementSpeed / doublePSpeed.size();
+        } else promedioSpeed = 0;
+        //HR
+        if (!intPHr.isEmpty()){
+            Iterator<Integer> iteratorHr = intPHr.iterator();
+            while (iteratorHr.hasNext()){
+                Log.i("service123","ENTRO A WHILE HR");
+                elementHr += iteratorHr.next();
+            }
+            promedioHr = (double) elementHr / intPHr.size();
+        } else promedioHr = 0;
+        //BR
+        if (!intPBr.isEmpty()){
+            Iterator<Integer> iteratorBr = intPBr.iterator();
+            while (iteratorBr.hasNext()) elementBr += iteratorBr.next();
+            promedioBr = (double)elementBr / intPBr.size();
+        } else promedioBr = 0;
+        //BPMAX
+        if (!intPBpmax.isEmpty()){
+            Iterator<Integer> iteratorBpmax = intPBpmax.iterator();
+            while (iteratorBpmax.hasNext()) elementBpmax += iteratorBpmax.next();
+            promedioBpmax = (double) elementBpmax / intPBpmax.size();
+        } else promedioBpmax = 0;
+        //BPMIN
+        if (!intPBpmin.isEmpty()){
+            Iterator<Integer> iteratorBpmin = intPBpmin.iterator();
+            while (iteratorBpmin.hasNext()){
+                elementBpmin += iteratorBpmin.next();
+            }
+            promedioBpmin = (double) elementBpmin / intPBpmin.size();
+        } else promedioBpmin = 0;
 
+        //FATIGA
+        if (!stringPFatigue.isEmpty()){
+            Log.i("service123","ENTRO A FATIGA IS NOT EMPTY");
+            //
+            Iterator<String> iteratorFatiga = stringPFatigue.iterator();
+            //
+            while (iteratorFatiga.hasNext()){
+                elementFatiga = iteratorFatiga.next();
+                Log.i("service123","ENTRO A WHILE FATIGA");
+                switch (elementFatiga) {
+                    case "Tired": contadorFatigaCansado++; break;
+                    case "Very_Tired": contadorFatigaMuyCansado++; break;
+                    case "Normal": contadorFatigaNormal++; break;
+                }
+            }
+        }
+        //MOOD
+        if (!stringPMood.isEmpty()){
+            Iterator<String> iteratorMood = stringPMood.iterator();
+            while (iteratorMood.hasNext()){
+                elementMood = iteratorMood.next();
+                switch (elementMood){
+                    case "Calm": contadorMoodCalmado++; break;
+                    case "Excitement": contadorMoodEmocionado++; break;
+                    case "Depression": contadorMoodDeprimido++; break;
+                }
+            }
+        }
         //
-        startActivity(new Intent(conduccion.this, PopUp.class));
+        Intent intent = new Intent(this,PopUp.class);
+        intent.putExtra("tiempo",tiempo);
+        intent.putExtra("promedioSpeed",promedioSpeed);
+        intent.putExtra("promedioHr",promedioHr);
+        intent.putExtra("promedioBr",promedioBr);
+        intent.putExtra("promedioBpmax",promedioBpmax);
+        intent.putExtra("promedioBpmin",promedioBpmin);
+        intent.putExtra("contadorCansado",contadorFatigaCansado + contadorFatigaMuyCansado);
+        intent.putExtra("contadorDeprimido",contadorMoodDeprimido);
+        intent.putExtra("contadorMedicionesFatiga", contadorFatigaCansado+contadorFatigaNormal+contadorFatigaMuyCansado);
+        startActivity(intent);
         //
+        Log.i("service123",tiempo);
+        Log.i("service123",promedioSpeed+"");
+        Log.i("service123",promedioHr+"");
+        Log.i("service123",promedioBr+"");
+        Log.i("service123",promedioBpmax+"");
+        Log.i("service123",promedioBpmin+"");
+        Log.i("service123",contadorFatigaCansado + contadorFatigaMuyCansado+"");
+        Log.i("service123",contadorMoodDeprimido+"");
     }
 
     public void pausar(View view){
@@ -558,6 +614,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback,T
                     //
                     //PROMEDIO
                     stringPFatigue.add(fatigue);
+                    Log.i("service123","Fatiga: " + stringPFatigue.get(0));
                     doublePSpeed.add(Double.parseDouble(stringSpeed));
                     //
                     if (internet()) {
@@ -569,7 +626,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback,T
                     //
                     //SPEAK
                     if (booleanSonido) {
-                        if (fatigue.equalsIgnoreCase("tired")) {
+                        if (fatigue.equalsIgnoreCase("tired") || fatigue.equalsIgnoreCase("Very_Tired")) {
                             mTts.speak("Tu nivel de fatiga es cansado ", 0, null, "fatiga");
                         } else mTts.speak("Tu nivel de fatiga es normal ", 0, null, "fatiga");
                     }
@@ -599,6 +656,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback,T
                 } else if (intent.getAction().equals(BROADCAST_ACTION_HR_MEASUREMENT)) {
                     booleanHrMeasure = true;
                     hr = intent.getStringExtra(INTENT_KEY_HR_MEASUREMENT);
+                    Log.i("service123","hr" + hr);
                     //
                     runOnUiThread(new Runnable() {
                         @Override

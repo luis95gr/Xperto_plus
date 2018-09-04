@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main"
+    tools:context="com.example.luis9.xperto_plus.main"
     android:background="@color/background">
 
     <android.support.v7.widget.Toolbar
@@ -49,6 +49,19 @@
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="15dp"
         android:background="@drawable/round_border3"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/md_red_A100"
+        android:src="@drawable/heart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="15dp"
+        android:onClick="floating"
         />
 
     <com.airbnb.lottie.LottieAnimationView

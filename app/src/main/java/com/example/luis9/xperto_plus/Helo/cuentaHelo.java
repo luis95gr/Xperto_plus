@@ -1,12 +1,10 @@
-package com.example.luis9.xpertp.Helo;
+package com.example.luis9.xperto_plus.Helo;
 
 
 import android.content.Intent;
-import android.graphics.ColorSpace;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.example.luis9.xpertp.R;

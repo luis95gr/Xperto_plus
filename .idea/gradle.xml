@@ -13,6 +13,9 @@
             <option value="$PROJECT_DIR$/android-connector-20180323" />
             <option value="$PROJECT_DIR$/android_Connector2017110702" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/connector-release" />
+            <option value="$PROJECT_DIR$/connector-release_em" />
+            <option value="$PROJECT_DIR$/connector_plus_plus" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

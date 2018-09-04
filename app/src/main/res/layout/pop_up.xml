@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PopUp"
+    tools:context="com.example.luis9.xperto_plus.PopUp"
     android:id="@+id/PopUp"
     android:background="@color/white">
 
@@ -108,6 +108,18 @@
                 android:layout_marginBottom="5dp"
                 />
             <TextView
+                android:id="@+id/textBpProm"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/PresionPro"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                />
+            <TextView
                 android:id="@+id/textFatigaProm"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
@@ -135,7 +147,7 @@
         <!--  TEXT SHARED PREFERENCES CONTAINERS  -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1.1"
             android:layout_gravity="center"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -177,6 +189,7 @@
                 android:layout_marginBottom="5dp"
                 android:textSize="17sp"
                 />
+
             <TextView
                 android:id="@+id/textBrProm2"
                 android:layout_width="wrap_content"
@@ -188,6 +201,18 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:textSize="17sp"
+                />
+            <TextView
+                android:id="@+id/textBpProm2"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/blue"
+                android:textSize="17sp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 />
             <TextView
                 android:id="@+id/textFatigaProm2"

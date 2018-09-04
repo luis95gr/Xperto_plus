@@ -1,4 +1,4 @@
-package com.example.luis9.xpertp.Helo;
+package com.example.luis9.xperto_plus.Helo;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -12,17 +12,14 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.location.LocationManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -30,9 +27,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.luis9.xperto_plus.conduccion;
+import com.example.luis9.xperto_plus.diagnosticoR;
 import com.example.luis9.xpertp.R;
-import com.example.luis9.xpertp.conduccion;
-import com.example.luis9.xpertp.typeWriterAnimation;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 import com.worldgn.connector.Connector;
@@ -53,27 +50,26 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
     private LinearLayout dynamic_measure_layout;
     DeviceItem deviceItem = null;
     private static final int REQUEST_ENABLED = 0;
-    Handler handler,handler2;
+    Handler handler,handler2,handlerConnect,handlerReconect;
+    boolean booleanBonded,booleanFalloConect = false;
     CountDownTimer countDownTimer;
 
     BluetoothAdapter bluetoothAdapter;
     PermissionListener permissionlistener;
     ProgressBar progressBar;
-    SharedPreferences spConnectionHelo;
+    SharedPreferences spConnectionHelo,spDiagnostico;
+    boolean diagnosticoRa = false;
     //
-    public final String BROADCAST_ACTION_APPVERSION_MEASUREMENT = "com.worldgn.connector.APPVERSION_MEASUREMENT";
-    public final String BROADCAST_ACTION_HELO_DEVICE_RESET = "com.worldgn.connector.ACTION_HELO_DEVICE_RESET";
-    public final String BROADCAST_ACTION_HELO_CONNECTED = "com.worldgn.connector.ACTION_HELO_CONNECTED";
-    public final String BROADCAST_ACTION_HELO_DISCONNECTED = "com.worldgn.connector.ACTION_HELO_DISCONNECTED";
-    public final String BROADCAST_ACTION_HELO_BONDED = "com.worldgn.connector.ACTION_HELO_BONDED";
-    public final String BROADCAST_ACTION_HELO_UNBONDED = "com.worldgn.connector.ACTION_HELO_UNBONDED";
-    public final String BROADCAST_ACTION_HELO_FIRMWARE = "com.worldgn.connector.ACTION_HELO_FIRMWARE";
-    public final String BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE = "com.worldgn.connector.MEASURE_WRITE_FAILURE";
-    public final String BROADCAST_ACTION_BATTERY = "com.worldgn.connector.BATTERY";
-    public  final String INTENT_KEY_BATTERY = "BATTERY";
-    public  final String INTENT_KEY_FIRMWARE = "HELO_FIRMWARE";
-    public  final String INTENT_KEY_MAC = "HELO_MAC";
-    public  final String INTENT_MEASUREMENT_WRITE_FAILURE = "MEASUREMENT_WRITE_FAILURE";
+    public static final String BROADCAST_ACTION_HELO_DEVICE_RESET = "com.worldgn.connector_plus.ACTION_HELO_DEVICE_RESET";
+    public static final String BROADCAST_ACTION_HELO_CONNECTED = "com.worldgn.connector_plus.ACTION_HELO_CONNECTED";
+    public static final String BROADCAST_ACTION_HELO_DISCONNECTED = "com.worldgn.connector_plus.ACTION_HELO_DISCONNECTED";
+    public static final String BROADCAST_ACTION_HELO_BONDED = "com.worldgn.connector_plus.ACTION_HELO_BONDED";
+    public static final String BROADCAST_ACTION_HELO_UNBONDED = "com.worldgn.connector_plus.ACTION_HELO_UNBONDED";
+    public static final String BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE = "com.worldgn.connector_plus.MEASURE_WRITE_FAILURE";
+    public static final String BROADCAST_ACTION_BATTERY = "com.worldgn.connector_plus.BATTERY";
+    public static final String INTENT_KEY_BATTERY = "BATTERY";
+    public static final String INTENT_KEY_MAC = "HELO_MAC";
+    public static final String INTENT_MEASUREMENT_WRITE_FAILURE = "MEASUREMENT_WRITE_FAILURE";
     //
 
     @Override
@@ -81,10 +77,15 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conexion_helo_bluetooth);
         spConnectionHelo = PreferenceManager.getDefaultSharedPreferences(this);
+        spDiagnostico = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
+        diagnosticoRa = intent.getBooleanExtra("diagnosticoR",false);
         //BLUETOOTH
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         handler = new Handler();
         handler2 = new Handler();
+        handlerConnect = new Handler();
+        handlerReconect = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -106,35 +107,15 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
         heloMeasurementReceiver = new MeasurementReceiver();
         //
         intentFilter = new IntentFilter();
-        intentFilter.addAction(BROADCAST_ACTION_APPVERSION_MEASUREMENT);
         intentFilter.addAction(BROADCAST_ACTION_BATTERY);
         intentFilter.addAction(BROADCAST_ACTION_HELO_CONNECTED);
         intentFilter.addAction(BROADCAST_ACTION_HELO_DISCONNECTED);
         intentFilter.addAction(BROADCAST_ACTION_HELO_DEVICE_RESET);
         intentFilter.addAction(BROADCAST_ACTION_HELO_BONDED);
         intentFilter.addAction(BROADCAST_ACTION_HELO_UNBONDED);
-        intentFilter.addAction(BROADCAST_ACTION_HELO_FIRMWARE);
         intentFilter.addAction(BROADCAST_ACTION_HELO_DEVICE_RESET);
         intentFilter.addAction(BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE);
         //
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.tConectarBle)
-                .setCancelable(false)
-                .setPositiveButton(R.string.Si, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        connectBleDevice();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //  Action for 'NO' Button
-                        dialog.cancel();
-                    }
-                });
-
-        //Creating dialog box
-        alertDialog = builder.create();
-
 
         permissionlistener = new PermissionListener() {
             @Override
@@ -157,17 +138,6 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
             buildAlertMessageNoGps();
         }
 
-        //AUTOMATIC STATUSES
-        /*if(spConnectionHelo.getBoolean("connected",false)){
-            conn_status.setText(R.string.Conectado);
-            bond_status.setText(R.string.Enlazado);
-            mac.setText(spConnectionHelo.getString("mac",getString(R.string.tConexionMac)));
-            battery.setText(spConnectionHelo.getString("battery",getString(R.string.tConexionMac)));
-            conn_status.setTextColor(Color.GREEN);
-            bond_status.setTextColor(Color.GREEN);
-            mac.setTextColor(Color.GREEN);
-            battery.setTextColor(Color.GREEN);
-        }*/
     }
     private void checkLocationPermission() {
         TedPermission.with(this)
@@ -243,29 +213,77 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
             @Override
             public void run() {
                 progressBar.setVisibility(View.VISIBLE);
-                textScanning.setVisibility(View.VISIBLE);
+                textScanning.setTextColor(getColor(R.color.white));
+                textScanning.setText(R.string.Escaneando);
             }
         });
 
     }
 
-    @Override
-    public void onScanFinished() {
+    public void scan(View view) {
+        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(intent, REQUEST_ENABLED);
+    }
+
+    public void comenzar(View view){
+        if (!bond_status.getText().toString().equalsIgnoreCase("enlazado")){
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.conexionBlue), R.string.DispositivoNoConectado, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        } else {
+            if (spConnectionHelo.getBoolean("diagnosticoR",false)) {
+                SharedPreferences.Editor spDiagnosticoEditor = spDiagnostico.edit();
+                spDiagnosticoEditor.remove("diagnosticoR");
+                spDiagnosticoEditor.apply();
+             startActivity(new Intent(conexionHeloBluetooth.this, diagnosticoR.class));  //DIAGNOSTICO RAPIDO
+            } else startActivity(new Intent(conexionHeloBluetooth.this, conduccion.class));
+
+        }
+    }
+
+    public void unpair(View view) {
+        scan.setEnabled(true);
+        Connector.getInstance().unbindDevice();
+        handler2.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bluetoothAdapter.disable();
+            }
+        },500);
+
         progressBar.setVisibility(View.INVISIBLE);
-        textScanning.setVisibility(View.INVISIBLE);
+        textScanning.setText(R.string.Esperando);
+        textScanning.setTextColor(getColor(R.color.white));
+        bond_status.setText(R.string.tEnlaceDesenlazado);
+        conn_status.setText(R.string.tConexionDesconectado);
+        battery.setText("");
+        conn_status.setTextColor(Color.WHITE);
+        mac.setTextColor(Color.WHITE);
     }
 
     @Override
-    public void onLedeviceFound(DeviceItem deviceItem) {
+    public void onScanFinished() {
         progressBar.setVisibility(View.INVISIBLE);
-        textScanning.setVisibility(View.INVISIBLE);
+        textScanning.setText(R.string.FalloConexion);
+    }
+
+    @Override
+    public void onLedeviceFound(final DeviceItem deviceItem) {
+        progressBar.setVisibility(View.INVISIBLE);
+        textScanning.setText(R.string.Encontrado);
+        textScanning.setTextColor(getColor(R.color.md_yellow_300));
         this.deviceItem = deviceItem;
-        alertDialog.show();
+        handlerConnect.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Connector.getInstance().connect(deviceItem);
+            }
+        },700);
     }
     @Override
     public void onPairedDeviceNotFound() {
         Toast.makeText(this, R.string.DispositivoNoEncontrado, Toast.LENGTH_LONG).show();
     }
+
 
     //
     public class MeasurementReceiver extends BroadcastReceiver {
@@ -298,7 +316,9 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
                             conn_status.setTextColor(Color.WHITE);
                             mac.setTextColor(Color.WHITE);
                             battery.setTextColor(Color.WHITE);
-                            comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF9A9A")));
+                            bond_status.setText(R.string.tEnlaceDesenlazado);
+                            bond_status.setTextColor(Color.WHITE);
+                            comenzar.setBackgroundTintList(getColorStateList(R.color.md_red_A200));
                             SharedPreferences.Editor spConnectionHeloEditor = spConnectionHelo.edit();
                             spConnectionHeloEditor.putBoolean("connected",false);
                             spConnectionHeloEditor.apply();
@@ -312,24 +332,30 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
                             conn_status.setTextColor(Color.GREEN);
                             mac.setText(intent.getStringExtra(INTENT_KEY_MAC));
                             mac.setTextColor(Color.GREEN);
-                            progressBar.setVisibility(View.INVISIBLE);
-                            textScanning.setVisibility(View.INVISIBLE);
-                            //comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#43cd80")));
-                            SharedPreferences.Editor spConnectionHeloEditor = spConnectionHelo.edit();
-                            spConnectionHeloEditor.putString("mac",mac.getText().toString());
-                            spConnectionHeloEditor.putBoolean("connected",true);
-                            spConnectionHeloEditor.apply();
-
+                            //
                         }
                     });
+                    handlerReconect.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!booleanBonded){
+                                booleanBonded = false;
+                                Log.i("service123","entro a booleanBonded");
+                                Connector.getInstance().unbindDevice();
+                                booleanFalloConect = true;
+                            }
+                        }
+                    },3000);
                 } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_DEVICE_RESET)) {
-                    Toast.makeText(conexionHeloBluetooth.this, "Restart Helo device by pressing 8 seconds", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(conexionHeloBluetooth.this, "Restart Helo device by pressing 8 seconds", Toast.LENGTH_LONG).show();
                 } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_BONDED)) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             progressBar.setVisibility(View.INVISIBLE);
-                            textScanning.setVisibility(View.INVISIBLE);
+                            booleanBonded = true;
+                            textScanning.setText(R.string.ListoManejar);
+                            textScanning.setTextColor(Color.parseColor("#43cd80"));
                             comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#43cd80")));
                             bond_status.setText(R.string.Enlazado);
                             bond_status.setTextColor(Color.GREEN);
@@ -339,9 +365,16 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.i("service123","UNBONDED");
                             comenzar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#EF9A9A")));
                             bond_status.setText(R.string.tEnlaceDesenlazado);
                             bond_status.setTextColor(Color.WHITE);
+                            //
+                            if (booleanFalloConect){
+                                Log.i("service123","entro a booleanFalloConect");
+                                booleanFalloConect = false;
+                                bondFallo();
+                            }
                         }
                     });
                 } else if(intent.getAction().equals(BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE)) {
@@ -352,43 +385,12 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
         }
     }
 
-    public void scan(View view) {
-        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(intent, REQUEST_ENABLED);
+    public void bondFallo () {
+        Connector.getInstance().scan(this);
+        Log.i("service123","entro a bondFallo");
     }
 
 
-    private void connectBleDevice() {
-        Connector.getInstance().connect(deviceItem);
-    }
-
-    public void comenzar(View view){
-        if (!bond_status.getText().toString().equalsIgnoreCase("enlazado")){
-           Snackbar snackbar = Snackbar.make(findViewById(R.id.conexionBlue), R.string.DispositivoNoConectado, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        } else {
-            startActivity(new Intent(conexionHeloBluetooth.this, conduccion.class));
-        }
-    }
-
-    public void unpair(View view) {
-        scan.setEnabled(true);
-        Connector.getInstance().unbindDevice();
-        handler2.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bluetoothAdapter.disable();
-            }
-        },500);
-
-        progressBar.setVisibility(View.INVISIBLE);
-        textScanning.setVisibility(View.INVISIBLE);
-        bond_status.setText(R.string.tEnlaceDesenlazado);
-        conn_status.setText(R.string.tConexionDesconectado);
-        battery.setText("");
-        conn_status.setTextColor(Color.WHITE);
-        mac.setTextColor(Color.WHITE);
-    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {

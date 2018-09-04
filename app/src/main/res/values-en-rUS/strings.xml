@@ -105,6 +105,14 @@
     <string name="RitmoP">Mean heart rate</string>
     <string name="ResPromedio">Mean breath rate</string>
     <string name="PresionPro">Mean pressure</string>
-    <string name="FatigaPro">Mean fatigue</string>
-    <string name="MoodPro">Mean mood</string>
+    <string name="FatigaPro">Fatigued</string>
+    <string name="MoodPro">Depressed</string>
+    <string name="ListoManejar">Ready to drive</string>
+    <string name="FalloConexion">Connection failed</string>
+    <string name="Esperando">Waiting...</string>
+    <string name="tituloDiagnostico">Quick diagnosis</string>
+    <string name="Valor">Value</string>
+    <string name="Diagnostico">Diagnosis</string>
+    <string name="Resultados">Results</string>
+    <string name="Instrucciones">Instructions</string>
 </resources>

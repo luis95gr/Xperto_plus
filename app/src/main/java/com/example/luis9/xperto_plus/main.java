@@ -1,51 +1,38 @@
-package com.example.luis9.xpertp;
+package com.example.luis9.xperto_plus;
 
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ToolbarWidgetWrapper;
-import android.transition.Fade;
 import android.transition.Slide;
-import android.transition.TransitionInflater;
-import android.util.Log;
-import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.example.luis9.xpertp.Helo.cuentaHelo;
+import com.example.luis9.xperto_plus.Helo.conexionHeloBluetooth;
+import com.example.luis9.xperto_plus.Helo.cuentaHelo;
+import com.example.luis9.xpertp.R;
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.ButtonEnum;
 import com.nightonke.boommenu.OnBoomListener;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
-import com.nightonke.boommenu.Util;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class main extends AppCompatActivity {
 
     TextView textBienvenido,textTituloCard;
     Button buttonManejar;
-    SharedPreferences spLogin;
+    SharedPreferences spLogin,spDiagnostico;
+    FloatingActionButton floatingActionButton;
 
 
     @Override
@@ -56,6 +43,8 @@ public class main extends AppCompatActivity {
         setupWindowAnimations();
         //CAST
         spLogin = getSharedPreferences("login", MODE_PRIVATE);
+        spDiagnostico = PreferenceManager.getDefaultSharedPreferences(this);
+        floatingActionButton = findViewById(R.id.floatingButton);
         textBienvenido = (TextView) findViewById(R.id.textBienvenido);
         textTituloCard = (TextView) findViewById(R.id.textTituloCard);
         buttonManejar = (Button) findViewById(R.id.buttonManejar);
@@ -65,22 +54,6 @@ public class main extends AppCompatActivity {
         buttonManejar.setTypeface(font);
         //
         textBienvenido.setText(getString(R.string.tBienvenido) +"\n" +spLogin.getString("name","")); //DEJAR ESTE
-        ArrayList<Integer> intBr = new ArrayList<>();
-        intBr.add(10);
-        intBr.add(5);
-        intBr.add(5);
-        intBr.add(10);
-        double promedio;
-        Iterator<Integer> iterator = intBr.iterator();
-        int element = 0;
-        while(iterator.hasNext()){
-            element += iterator.next();
-        }
-        promedio = (double) element/intBr.size();
-        Toast.makeText(this, ""+promedio, Toast.LENGTH_SHORT).show();
-        Log.i("service123","SUMA" + element);
-        Log.i("service123","TAMAÑO" + intBr.size());
-        Log.i("service123","PROMEDIO" + promedio);
     }
 
     //BOTONES
@@ -90,7 +63,13 @@ public class main extends AppCompatActivity {
 
     }
     //
-
+    public void floating(View view){
+        SharedPreferences.Editor spDiagnosticoEditor = spDiagnostico.edit();
+        spDiagnosticoEditor.putBoolean("diagnosticoR",true);
+        spDiagnosticoEditor.apply();
+        startActivity(new Intent(main.this, cuentaHelo.class));
+    }
+    //
 
     protected void onResume(){
         super.onResume();

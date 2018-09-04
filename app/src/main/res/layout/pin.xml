@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Helo.PinActivity"
+    tools:context="com.example.luis9.xperto_plus.Helo.PinActivity"
     android:orientation="vertical">
 
     <TextView

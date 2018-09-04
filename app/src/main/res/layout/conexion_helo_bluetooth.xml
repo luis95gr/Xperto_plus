@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Helo.conexionHeloBluetooth"
+    tools:context="com.example.luis9.xperto_plus.Helo.conexionHeloBluetooth"
     android:background="@color/background"
     android:id="@+id/conexionBlue">
 
@@ -254,11 +254,10 @@
         android:textColor="@color/white"
         android:textAlignment="center"
         android:textSize="17sp"
-        android:text="@string/Escaneando"
+        android:text="@string/Esperando"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/buttons"
-        android:visibility="invisible"
         />
 
     <Button

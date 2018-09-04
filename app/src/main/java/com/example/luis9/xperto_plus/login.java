@@ -1,4 +1,4 @@
-package com.example.luis9.xpertp;
+package com.example.luis9.xperto_plus;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +9,6 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
-import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
@@ -20,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.design.widget.Snackbar;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.volley.Request;
@@ -29,12 +26,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.luis9.xpertp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.Locale;
-import java.util.Set;
 
 public class login extends AppCompatActivity implements TextToSpeech.OnInitListener {
 

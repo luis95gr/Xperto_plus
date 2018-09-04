@@ -28,7 +28,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".GlobalVars"
+        android:name="com.example.luis9.xperto_plus.GlobalVars"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:hardwareAccelerated="false"
@@ -39,7 +39,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".login"
+            android:name="com.example.luis9.xperto_plus.login"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,20 +48,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".main"
+            android:name="com.example.luis9.xperto_plus.main"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".createAccount"
+            android:name="com.example.luis9.xperto_plus.createAccount"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Helo.cuentaHelo"
+            android:name="com.example.luis9.xperto_plus.Helo.cuentaHelo"
             android:screenOrientation="portrait" />
-        <activity android:name=".Helo.PinActivity" />
+        <activity android:name="com.example.luis9.xperto_plus.Helo.PinActivity" />
         <activity
-            android:name=".Helo.conexionHeloBluetooth"
+            android:name="com.example.luis9.xperto_plus.Helo.conexionHeloBluetooth"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".conduccion"
+            android:name="com.example.luis9.xperto_plus.conduccion"
             android:label="@string/title_activity_conduccion"
             android:screenOrientation="portrait">
 
@@ -84,15 +84,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".profile" />
+        <activity android:name="com.example.luis9.xperto_plus.profile" />
 
-        <service android:name=".serviceInternet" />
+        <service android:name="com.example.luis9.xperto_plus.serviceInternet" />
 
-        <activity android:name=".PopUp"
+        <activity
+            android:name="com.example.luis9.xperto_plus.PopUp"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.CustomTheme"
-            >
-        </activity>
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity
+            android:name="com.example.luis9.xperto_plus.diagnosticoR"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.example.luis9.xperto_plus.estadisticas.estadisticas"></activity>
     </application>
 
 </manifest>
