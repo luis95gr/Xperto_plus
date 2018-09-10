@@ -95,7 +95,13 @@
         <activity
             android:name="com.example.luis9.xperto_plus.diagnosticoR"
             android:screenOrientation="portrait" />
-        <activity android:name="com.example.luis9.xperto_plus.estadisticas.estadisticas"></activity>
+        <activity android:name="com.example.luis9.xperto_plus.estadisticas.estadisticas" />
+        <activity
+            android:name="com.example.luis9.xperto_plus.popUpEstadisticas"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.CustomTheme"/>
+
+
     </application>
 
 </manifest>

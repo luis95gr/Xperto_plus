@@ -88,7 +88,56 @@
     android:layout_height="0dp"
     android:layout_weight="3"
     tools:context="com.example.luis9.xperto_plus.conduccion"
-    />
+    >
+
+    <LinearLayout
+        android:id="@+id/fragmentB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="+"
+            android:textColor="@color/white"
+            android:backgroundTint="#66000000"
+            android:padding="10dp"
+            android:onClick="zoom"
+            />
+
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="-"
+            android:textColor="@color/white"
+            android:backgroundTint="#66000000"
+            android:padding="10dp"
+            android:onClick="zoomMenos"
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="X"
+        android:layout_gravity="start|top"
+        android:textColor="@color/white"
+        android:backgroundTint="#66000000"
+        android:padding="10dp"
+        android:onClick="zoomCancel"
+        />
+
+
+
+
+
+
+
+
+</fragment>
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

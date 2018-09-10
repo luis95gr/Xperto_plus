@@ -454,7 +454,6 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:textAlignment="center"
-                android:inputType="phone"
                 android:hint="@string/tConductorInfo"
                 android:textColorHint="@color/grey"
                 android:textColor="@color/white"

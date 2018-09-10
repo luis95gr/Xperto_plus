@@ -1,24 +1,42 @@
 package com.example.luis9.xperto_plus;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Slide;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.luis9.xperto_plus.Helo.conexionHeloBluetooth;
 import com.example.luis9.xperto_plus.Helo.cuentaHelo;
+import com.example.luis9.xperto_plus.estadisticas.estadisticas;
 import com.example.luis9.xpertp.R;
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
@@ -26,13 +44,26 @@ import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomMenuButton;
 import com.nightonke.boommenu.OnBoomListener;
 import com.nightonke.boommenu.Piece.PiecePlaceEnum;
+import com.worldgn.connector.Connector;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class main extends AppCompatActivity {
 
-    TextView textBienvenido,textTituloCard;
+    TextView textBienvenido,textTituloCard,textDuracion,textFecha,textVeloc,textFatiga;
     Button buttonManejar;
     SharedPreferences spLogin,spDiagnostico;
     FloatingActionButton floatingActionButton;
+    PowerManager pm;
+    String ip = "http://smarth.xperto.com.mx/mean/recuperajson.php?usuario=";
+    String stringId;
+    JSONArray jsonArray;
+    int fatiga;
+    Animation animation;
+    ImageView imageView;
+
 
 
     @Override
@@ -40,27 +71,56 @@ public class main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         menu();
-        setupWindowAnimations();
         //CAST
         spLogin = getSharedPreferences("login", MODE_PRIVATE);
         spDiagnostico = PreferenceManager.getDefaultSharedPreferences(this);
         floatingActionButton = findViewById(R.id.floatingButton);
         textBienvenido = (TextView) findViewById(R.id.textBienvenido);
         textTituloCard = (TextView) findViewById(R.id.textTituloCard);
+        textDuracion = findViewById(R.id.textDuracion);
+        textFecha = findViewById(R.id.textFecha);
+        textVeloc = findViewById(R.id.textVelocidad);
+        textFatiga = findViewById(R.id.textFatiga);
         buttonManejar = (Button) findViewById(R.id.buttonManejar);
         Typeface font = Typeface.createFromAsset(getAssets(), "Jellee-Roman.ttf");
         textBienvenido.setTypeface(font);
         textTituloCard.setTypeface(font);
         buttonManejar.setTypeface(font);
+        stringId = spLogin.getString("id","id");
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blink);
+        imageView = findViewById(R.id.imageR);
         //
         textBienvenido.setText(getString(R.string.tBienvenido) +"\n" +spLogin.getString("name","")); //DEJAR ESTE
+        //AHORRO DE ENERGIA DESACTIVAR
+        pm = (PowerManager) getBaseContext().getSystemService(Context.POWER_SERVICE);
+        if (!pm.isIgnoringBatteryOptimizations(getPackageName())) {
+            Intent intent = new Intent();
+            intent.setData(Uri.parse("package:" + getApplication().getPackageName()));
+            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            startActivityForResult(intent,1);
+        }
+        //VolleyPetition(ip + stringId);
+        //VolleyPetition(ip + "2");
+        textDuracion.setText(spLogin.getString("duracion","0"));
+        textFecha.setText(spLogin.getString("fecha","0"));
+        textVeloc.setText(spLogin.getString("velocidad","0"));
+        textFatiga.setText(String.valueOf(spLogin.getInt("fatiga",0)));
     }
 
     //BOTONES
     public void manejar(View view){
+        SharedPreferences.Editor spDiagnosticoEditor = spDiagnostico.edit();
+        spDiagnosticoEditor.putBoolean("diagnosticoR",false);
+        spDiagnosticoEditor.apply();
         startActivity(new Intent(main.this, cuentaHelo.class));
-        //startActivity(new Intent(main.this, PopUp.class));
-
+        //startActivity(new Intent(main.this, popUpEstadisticas.class));
+    }
+    public void reload(View view){
+        //VolleyPetition(ip + stringId);
+        if (internet()) {
+            VolleyPetition(ip + stringId);
+            imageView.startAnimation(animation);
+        } else Toast.makeText(this, "No hay internet", Toast.LENGTH_SHORT).show();
     }
     //
     public void floating(View view){
@@ -79,7 +139,61 @@ public class main extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                if (pm.isIgnoringBatteryOptimizations(getPackageName())) {
+                    Snackbar snackbar = Snackbar.make(findViewById(R.id.main), "DESACTIVADO", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                }
+                else {
+                    Snackbar.make(findViewById(R.id.main),"Algunas funcionalidades pueden no estar disponibles",Snackbar.LENGTH_LONG)
+                    .setAction("REINTENTAR", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent();
+                            intent.setData(Uri.parse("package:" + getApplication().getPackageName()));
+                            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                            startActivityForResult(intent,1);
+                        }
+                    }).show();
+                }
 
+        }
+    }
+    public void VolleyPetition(String URL) {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //
+                try {
+                    jsonArray = new JSONArray(response);
+                    String a;
+                    a = jsonArray.getString(0);
+                    JSONObject jsonObject = new JSONObject(a);
+                    textDuracion.setText(jsonObject.getString("duracion"));
+                    textFecha.setText(jsonObject.getString("fecha"));
+                    textVeloc.setText(jsonObject.getString("velocidad"));
+                    fatiga = Integer.parseInt(jsonObject.getString("tired"));
+                    fatiga += Integer.parseInt(jsonObject.getString("very_tired"));
+                    textFatiga.setText(String.valueOf(fatiga));
+                    imageView.clearAnimation();
+                    Toast.makeText(main.this, "Actualizado", Toast.LENGTH_SHORT).show();
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                //
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        queue.add(stringRequest);
+    }
 
 
 
@@ -121,10 +235,6 @@ public class main extends AppCompatActivity {
     }
     //END MENU 3 DOTS
 
-
-
-
-
     public void menu() {
         //
         android.support.v7.widget.Toolbar toolbar;
@@ -158,7 +268,7 @@ public class main extends AppCompatActivity {
                     startActivity(new Intent(main.this, profile.class));
                 }
                 if (index == 2){
-                    Toast.makeText(main.this, "Coca", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(main.this, estadisticas.class));
                 }
             }
             @Override
@@ -178,11 +288,16 @@ public class main extends AppCompatActivity {
             }
         });
     }
-    private void setupWindowAnimations() {
-        Slide slide = new Slide();
-        slide.setDuration(2000);
-        getWindow().setExitTransition(slide);
-        getWindow().setEnterTransition(slide);
+    protected boolean internet() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+        networkInfo = cm.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
     }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

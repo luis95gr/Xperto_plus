@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">xperto</string>
+    <string name="app_name" translatable="false">FR Integral</string>
     <string name="tCorreo">Correo electrónico</string>
     <string name="tContraseña">Contraseña</string>
     <string name="tIniciarSesion">Iniciar sesión</string>

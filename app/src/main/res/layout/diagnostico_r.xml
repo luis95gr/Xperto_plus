@@ -111,6 +111,20 @@
         android:visibility="invisible"
         />
 
+    <TextView
+        android:id="@+id/detalles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Detalles"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/tabla"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="10dp"
+        android:onClick="detalles"
+        android:visibility="invisible"
+        />
+
     <!--            TABLA                -->
     <android.support.v7.widget.LinearLayoutCompat
         android:id="@+id/tabla"

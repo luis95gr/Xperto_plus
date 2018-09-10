@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.luis9.xperto_plus.estadisticas.estadisticas;
 import com.example.luis9.xpertp.R;
 import com.nightonke.boommenu.BoomButtons.BoomButton;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
@@ -166,7 +168,7 @@ public class profile extends AppCompatActivity {
                     bmb.reboom();
                 }
                 if (index == 2){
-                    Toast.makeText(profile.this, "Coca", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(profile.this, estadisticas.class));
                 }
             }
             @Override

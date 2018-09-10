@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.luis9.xperto_plus.main"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:id="@+id/main">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -99,6 +100,16 @@
         tools:ignore="Content Description"
         />
 
+    <ImageView
+        android:id="@+id/imageR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/reload"
+        app:layout_constraintBottom_toTopOf="@id/cardView"
+        app:layout_constraintRight_toRightOf="@id/cardView"
+        android:onClick="reload"
+        />
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
@@ -113,6 +124,7 @@
 
             <!--            TABLA                -->
             <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/linearTabla"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -177,7 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@string/tFatiga"
+                    android:text="@string/Cansado"
                     android:textSize="16sp"
                     android:textAlignment="center"
                     android:textColor="@color/black"/>
@@ -195,6 +207,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:textColor="@color/black"
                     android:text=""
                     android:textAlignment="center" />
 

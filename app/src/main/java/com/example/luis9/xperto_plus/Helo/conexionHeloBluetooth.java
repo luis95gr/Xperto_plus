@@ -232,11 +232,12 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
         } else {
             if (spConnectionHelo.getBoolean("diagnosticoR",false)) {
                 SharedPreferences.Editor spDiagnosticoEditor = spDiagnostico.edit();
-                spDiagnosticoEditor.remove("diagnosticoR");
+                spDiagnosticoEditor.putBoolean("diagnosticoR",false);
                 spDiagnosticoEditor.apply();
-             startActivity(new Intent(conexionHeloBluetooth.this, diagnosticoR.class));  //DIAGNOSTICO RAPIDO
-            } else startActivity(new Intent(conexionHeloBluetooth.this, conduccion.class));
-
+                startActivity(new Intent(conexionHeloBluetooth.this, diagnosticoR.class));  //DIAGNOSTICO RAPIDO
+            } else if (!spConnectionHelo.getBoolean("diagnosticoR",false)) {
+                startActivity(new Intent(conexionHeloBluetooth.this, conduccion.class));
+            }
         }
     }
 

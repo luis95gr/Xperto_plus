@@ -3,7 +3,20 @@ package com.example.luis9.xperto_plus;
 import android.app.Application;
 
 public class GlobalVars extends Application {
-    private String name, email, pass, birth,gender,country, image,id,tel;
+    private String name;
+    private String email;
+    private String pass;
+    private String birth;
+    private String gender;
+    private String country;
+    private String image;
+    private String id;
+    private String tel;
+
+    public String getId() {
+        return id;
+    }
+
     private int weight, height,ejercicio;
 
 

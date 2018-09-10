@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha"
+        android:textColor="@color/md_green_400"
+        android:textSize="16sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:id="@+id/hora"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hora"
+        android:textColor="@color/md_blue_500"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/linear"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/fecha"
+        android:showDividers="middle"
+        android:divider="@color/md_light_dividers"
+
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/static_icon2"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            >
+
+
+            <TextView
+                android:id="@+id/duracion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Duracion"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/velocidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Velocidad"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/ritmo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ritmo"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/respiracion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Respiracion"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/presion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Presión"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:gravity="center_vertical"
+            >
+
+
+            <TextView
+                android:id="@+id/fNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fatiga normal"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginTop="10dp"
+                />
+            <TextView
+                android:id="@+id/fCansado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fatiga cansado"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/fMuy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fatiga muy cansado"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/mCalmado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ánimo calmado"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/mExcite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ánimo emocionado"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/mDepri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ánimo deprimido"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/horaFin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hora"
+        android:textColor="@color/md_red_A200"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/linear"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="@color/background"
+        app:layout_constraintTop_toBottomOf="@id/hora"
+        />
+
+</android.support.constraint.ConstraintLayout>

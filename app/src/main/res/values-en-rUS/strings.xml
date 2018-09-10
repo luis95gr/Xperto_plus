@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">xperto</string>
     <string name="tCorreo">Email</string>
     <string name="tContraseña">Password</string>
     <string name="tIniciarSesion">Login</string>
@@ -115,4 +114,5 @@
     <string name="Diagnostico">Diagnosis</string>
     <string name="Resultados">Results</string>
     <string name="Instrucciones">Instructions</string>
+    <string name="Cansado">Tired measures</string>
 </resources>

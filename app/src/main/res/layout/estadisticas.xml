@@ -9,11 +9,60 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbarid"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="180dp"
         android:gravity="center"
         android:elevation="0dp"
         android:background="@color/background">
 
+        <com.dragankrstic.autotypetextview.AutoTypeTextView
+            app:animateTextTypeWithoutMistakes="@string/tituloEstadisticas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/toolbar"
+            />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:src="@drawable/stats2"
+            />
+
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tablayout_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
+        app:tabTextColor="@color/black"
+        app:tabSelectedTextColor="@color/white"
+        app:tabBackground="@color/background"
+        app:tabIndicatorColor="@color/white">
+    </android.support.design.widget.TabLayout>
+    
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v4.view.ViewPager>
+    
+    
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

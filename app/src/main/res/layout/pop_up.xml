@@ -39,6 +39,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/linear3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -242,5 +243,16 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/linear3"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="Cerrar"
+        android:background="@drawable/round_border_rojo"
+        android:onClick="cerrar"
+        />
 
 </android.support.constraint.ConstraintLayout>

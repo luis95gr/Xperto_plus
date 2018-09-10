@@ -30,6 +30,7 @@ import com.example.luis9.xpertp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class login extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
@@ -37,7 +38,7 @@ public class login extends AppCompatActivity implements TextToSpeech.OnInitListe
     SharedPreferences spLogin;
     EditText etEmail,etPass;
     Button btnLog;
-    String ip = "meddataa.sytes.net/sesioncel/index.php?";
+    String ip = "smarth.xperto.com.mx/sesioncel/index.php?";
     TextView txtCreateA;
     JSONArray jsonArray;
     int acceso=0;
@@ -84,6 +85,8 @@ public class login extends AppCompatActivity implements TextToSpeech.OnInitListe
         }
         VolleyPetition("http://"+ ip +"correo=" + etEmail.getText().toString()
                 + "&password=" +etPass.getText().toString());
+        //VolleyPetition2("http://smarth.xperto.com.mx/mean/recuperajson.php?usuario=" + spLogin.getString("id","id"));
+        VolleyPetition2("http://smarth.xperto.com.mx/mean/recuperajson.php?usuario=" + "2");
     }
     public void create(View view){
         Intent i = new Intent(getApplicationContext(), createAccount.class);
@@ -138,6 +141,7 @@ public class login extends AppCompatActivity implements TextToSpeech.OnInitListe
                         new Handler().postDelayed(new Runnable(){
                             @Override
                             public void run(){
+                                //
                                 Intent intent = new Intent(login.this,main.class);
                                 startActivity(intent);
                             }
@@ -149,6 +153,42 @@ public class login extends AppCompatActivity implements TextToSpeech.OnInitListe
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), "El usuario no existe", Toast.LENGTH_LONG).show();
                 }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void VolleyPetition2(String URL) {
+        Log.i("service123","volley2");
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //
+                try {
+                    jsonArray = new JSONArray(response);
+                    String a;
+                    a = jsonArray.getString(0);
+                    JSONObject jsonObject = new JSONObject(a);
+                    SharedPreferences.Editor spLoginEditor = spLogin.edit();
+                    spLoginEditor.putString("velocidad",jsonObject.getString("velocidad"));
+                    spLoginEditor.putString("fecha",jsonObject.getString("fecha"));
+                    spLoginEditor.putString("duracion",jsonObject.getString("duracion"));
+                    int fatiga;
+                    fatiga = Integer.parseInt(jsonObject.getString("tired"));
+                    fatiga += Integer.parseInt(jsonObject.getString("very_tired"));
+                    spLoginEditor.putInt("fatiga",fatiga);
+                    Log.i("service123",fatiga+"");
+                    spLoginEditor.apply();
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                //
             }
         }, new Response.ErrorListener() {
             @Override

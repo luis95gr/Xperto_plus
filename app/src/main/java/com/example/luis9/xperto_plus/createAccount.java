@@ -35,7 +35,7 @@ public class createAccount extends AppCompatActivity {
     Spinner spYear, spMonth, spDay, spCountry, spEjercicio;
     RadioButton rbFemale, rbMale;
     TextView txtNext;
-    String ip = "meddataa.sytes.net/altachofer/registrocel.php?";
+    String ip = "smarth.xperto.com.mx/altachofer/registrocel.php?";
     String CompleteName, Email, Password, Phone, Weight, Height, Birthday, Country, Gender, Ejercicio,ID;
 
     //
@@ -106,10 +106,10 @@ public class createAccount extends AppCompatActivity {
                     Password = etPass.getText().toString();
                 }
                 if (rbFemale.isChecked()) {
-                    Gender = "0";
+                    Gender = "Femenino";
                 }
                 if (rbMale.isChecked()) {
-                    Gender = "1";
+                    Gender = "Masculino";
                 }
 
                 Weight = etWeight.getText().toString();
@@ -120,11 +120,9 @@ public class createAccount extends AppCompatActivity {
                 Ejercicio = spEjercicio.getSelectedItem().toString();
                 ID = etIDconductor.getText().toString();
 
-
-
-                VolleyPetition("http://"+ ip +"correo=" + Email + "&password=" + Password +
-                        "&nombre=" + CompleteName + "&fecha=" + Birthday + "&genero=" + Gender + "&pais=" + Country
-                        + "&condicion=" + Ejercicio + "&peso=" + Weight + "&altura=" + Height + "&celular=" + Phone + "&usuario=" + ID);
+                VolleyPetition("http://"+ ip + "nombre=" + CompleteName + "&usuario=" + ID + "&correo=" + Email + "&password=" + Password +
+                        "&celular=" + Phone + "&genero=" + Gender + "&peso=" + Weight + "&altura=" + Height + "&fecha=" + Birthday +
+                        "&pais=" + Country + "&condicion=" + Ejercicio);
 
                 spLoginEditor.putString("email",etEmail.getText().toString());
                 spLoginEditor.putString("password",etPass.getText().toString());
