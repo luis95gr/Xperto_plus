@@ -133,15 +133,16 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     NotificationManager notificationManager;
     //FINALIZAR VIAJE VARIABLES
     ArrayList<Integer> intPBr, intPHr, intPBpmax, intPBpmin;
-    int elementBr, elementHr, elementBpmax, elementBpmin = 0;
+    int elementBr, elementHr, elementBpmax, elementBpmin,elementSpeed = 0;
     String elementFatiga, elementMood;
     ArrayList<String> stringPFatigue, stringPMood;
     ArrayList<Double> doublePSpeed;
-    double elementSpeed = 0;
+    //double elementSpeed = 0;
     String horaInicio, tiempo;
     double promedioBr, promedioHr, promedioBpmax, promedioBpmin;
+    double promedioSpeed = 0;
     int contadorFatigaCansado, contadorFatigaNormal, contadorFatigaMuyCansado, contadorMoodEmocionado,
-            contadorMoodDeprimido, contadorMoodCalmado, promedioSpeed;
+            contadorMoodDeprimido, contadorMoodCalmado;
     boolean booleanBonded,booleanFalloConect = false;
     //MAPA
     int zoom = 19;
@@ -358,15 +359,22 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         tiempo = chronometer.getText().toString();
         //PROMEDIOS
         //VELOC
+        Log.i("service123","promedioSpeed:" + promedioSpeed);
         if (!doublePSpeed.isEmpty()){
+            Log.i("service123","speed no esta vacio");
+            Log.i("service123" ,"" +doublePSpeed.size());
             Iterator<Double> iteratorSpeed = doublePSpeed.iterator();
             while (iteratorSpeed.hasNext()){
                 elementSpeed += iteratorSpeed.next();
             }
             if (elementSpeed == 0){
+                Log.i("service123","elementspeed = 0");
                 promedioSpeed = 0;
-            } else promedioSpeed = (int) elementSpeed / doublePSpeed.size();
-        } else promedioSpeed = 0;
+            } else promedioSpeed = (double) elementSpeed / doublePSpeed.size();
+        } else {
+            Log.i("service123","speed esta vacio");
+            promedioSpeed = 0;
+        }
         //HR
         if (!intPHr.isEmpty()){
             Iterator<Integer> iteratorHr = intPHr.iterator();
@@ -444,16 +452,25 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         intent.putExtra("contadorDeprimidoEnviar",contadorMoodDeprimido);
         intent.putExtra("contadorEmocionadoEnviar",contadorMoodEmocionado);
         intent.putExtra("horaInicio",horaInicio);
+        doublePSpeed.clear();
+        intPHr.clear();
+        intPBr.clear();
+        intPBpmax.clear();
+        intPBpmin.clear();
+        stringPFatigue.clear();
+        stringPMood.clear();
+        Log.i("service123","intPhr:" + intPHr.isEmpty());
+
         startActivity(intent);
         //
-        Log.i("service123",tiempo);
+        /*Log.i("service123",tiempo);
         Log.i("service123",promedioSpeed+"");
         Log.i("service123",promedioHr+"");
         Log.i("service123",promedioBr+"");
         Log.i("service123",promedioBpmax+"");
         Log.i("service123",promedioBpmin+"");
         Log.i("service123",contadorFatigaCansado + contadorFatigaMuyCansado+"");
-        Log.i("service123",contadorMoodDeprimido+"");
+        Log.i("service123",contadorMoodDeprimido+"");*/
     }
 
     public void pausar(View view){
@@ -643,7 +660,12 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            textUltimaMedicion.setText("Fatiga: " + fatigue);
+                            if (fatigue.equalsIgnoreCase("tired")){
+                                textUltimaMedicion.setText("Fatiga: Cansado" );
+                            }
+                            if (fatigue.equalsIgnoreCase("Very_Tired")){
+                                textUltimaMedicion.setText("Fatiga: Muy cansado");
+                            }
                         }
                     });
                     //

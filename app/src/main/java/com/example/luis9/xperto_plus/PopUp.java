@@ -137,6 +137,14 @@ public class PopUp extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        promedioHr = "";
+        promedioBpmin = "";
+        promedioSpeed = "";
+        promedioBr = "";
+        promedioBpmax = "";
+        contadorMuyCansadoEnviar = contadorDeprimidoEnviar = contadorEmocionadoEnviar = contadorMuyCansadoEnviar = contadorNormalEnviar =
+            contadorCansadoEnviar = 0;
+
     }
 
 
