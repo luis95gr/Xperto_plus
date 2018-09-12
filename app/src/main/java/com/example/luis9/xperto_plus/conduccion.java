@@ -1212,7 +1212,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     }
     public String hour(){
         date = Calendar.getInstance().getTime();
-        sdfHour = new SimpleDateFormat("kk:mm:ss");
+        sdfHour = new SimpleDateFormat("HH:mm:ss");
         stringHour = sdfHour.format(date);
         return stringHour;
     }

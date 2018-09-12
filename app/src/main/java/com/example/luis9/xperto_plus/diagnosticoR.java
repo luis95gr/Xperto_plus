@@ -158,8 +158,8 @@ public class diagnosticoR extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             chronometer.setVisibility(View.VISIBLE);
             textMidiendo.setVisibility(View.VISIBLE);
-            detalles.setVisibility(View.VISIBLE);
             iniciar.setEnabled(false);
+            detalles.setVisibility(View.INVISIBLE);
             startcountDownTimerMediciones();
             progressBar.animate();
             chronometer();
@@ -415,6 +415,7 @@ public class diagnosticoR extends AppCompatActivity {
                 chronometer.stop();
                 textMidiendo.setText("TERMINADO");
                 iniciar.setEnabled(true);
+                detalles.setVisibility(View.VISIBLE);
                 VolleyPetition(ip + spLogin.getString("id","id") + "&hr=" + hr + "&fatiga=" + fatigue + "&mood=" + mood +
                     "&br=" + br + "&bpmax=" + max + "&bpmin" + min + "&hora=" + hour() + "&fecha=" + dates());
             }
@@ -677,7 +678,7 @@ public class diagnosticoR extends AppCompatActivity {
     }
     public String hour(){
         date = Calendar.getInstance().getTime();
-        sdfHour = new SimpleDateFormat("kk:mm:ss");
+        sdfHour = new SimpleDateFormat("HH:mm:ss");
         stringHour = sdfHour.format(date);
         return stringHour;
     }

@@ -2,6 +2,8 @@ package com.example.luis9.xperto_plus.estadisticas;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -73,7 +75,11 @@ public class diasFragment extends Fragment {
         recyclerView = vista.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //
-        VolleyPetition(ip + spLogin.getString("id","id"));
+        if (internet()) {
+            VolleyPetition(ip + spLogin.getString("id", "id"));
+        } else {
+            textView.setText("No hay internet disponible");
+        }
         Log.i("service123",spLogin.getString("id","id"));
         handler.postDelayed(new Runnable() {
             @Override
@@ -143,12 +149,18 @@ public class diasFragment extends Fragment {
         }
     }
 
+    protected boolean internet() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+        networkInfo = cm.getActiveNetworkInfo();
 
-    /*private void llenarLista() {
-        listaDatos.add(new variablesBoDias("2018-09-05","70","15","120/80","16","15","20","15","16","20"));
-        listaDatos.add(new variablesBoDias("2018-09-05","70","15","120/80","16","15","20","15","16","20"));
-        listaDatos.add(new variablesBoDias("2018-09-05","70","15","120/80","16","15","20","15","16","20"));
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    }*/
+
 
 }

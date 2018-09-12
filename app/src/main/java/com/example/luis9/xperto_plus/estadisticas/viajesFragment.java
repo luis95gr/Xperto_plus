@@ -3,6 +3,8 @@ package com.example.luis9.xperto_plus.estadisticas;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -84,8 +86,11 @@ public class viajesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         //
         /////////////////////////////////////////////////ID
-        //VolleyPetition(ip + "2");
-        VolleyPetition(ip + spLogin.getString("id","id"));    //ESTE ES EL CORRECTO
+        if (internet()) {
+            VolleyPetition(ip + spLogin.getString("id", "id"));    //ESTE ES EL CORRECTO
+        } else {
+            textView.setText("No hay internet disponible");
+        }
         Log.i("service123",spLogin.getString("id","id"));
         handler.postDelayed(new Runnable() {
             @Override
@@ -157,6 +162,18 @@ public class viajesFragment extends Fragment {
                         arrayListVeryTired.get(i),arrayListCalm.get(i),arrayListExc.get(i),arrayListDepr.get(i)));
 
             }
+        }
+    }
+
+    protected boolean internet() {
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = null;
+        networkInfo = cm.getActiveNetworkInfo();
+
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
         }
     }
 

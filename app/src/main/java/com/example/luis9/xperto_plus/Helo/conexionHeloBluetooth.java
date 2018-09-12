@@ -90,6 +90,7 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
             @Override
             public void run() {
                 bluetoothAdapter.disable();
+                Log.i("service123","bluetooth"+bluetoothAdapter.isEnabled());
             }
         },1000);
         //
@@ -97,7 +98,7 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
         textScanning = findViewById(R.id.textScanning);
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         scan = (Button) findViewById(R.id.scan);
-        unpair = (Button) findViewById(R.id.unpair);
+        unpair = findViewById(R.id.unpair);
         comenzar = findViewById(R.id.buttonEmpezar);
         mac = (TextView)findViewById(R.id.mac);
         dynamic_measure_layout = (LinearLayout) findViewById(R.id.buttons);
@@ -131,7 +132,7 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
 
 
         };
-        checkBTenabled();
+        //checkBTenabled();
         if(isGpsEnabled()) {
             checkLocationPermission();
         } else {
@@ -158,7 +159,6 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             return false;
         } else {
-
             return true;
         }
     }
@@ -184,23 +184,6 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
     }
 
 
-
-    private void checkBTenabled() {
-        BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(BLUETOOTH_SERVICE);
-        BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
-        if (mBluetoothAdapter == null) {
-            // Device does not support Bluetooth
-            Toast.makeText(this, R.string.bluetoothNo, Toast.LENGTH_LONG).show();
-        } else {
-            if (!mBluetoothAdapter.isEnabled()) {
-                // Bluetooth is not enable :)
-                Toast.makeText(this, R.string.bluetoothOff, Toast.LENGTH_LONG).show();
-                mBluetoothAdapter.enable();
-            }
-        }
-
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -221,8 +204,12 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
     }
 
     public void scan(View view) {
-        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        startActivityForResult(intent, REQUEST_ENABLED);
+        if (!bluetoothAdapter.isEnabled()) {
+            unpair.setEnabled(false);
+            scan.setEnabled(false);
+            Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(intent, REQUEST_ENABLED);
+        }
     }
 
     public void comenzar(View view){
@@ -242,29 +229,32 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
     }
 
     public void unpair(View view) {
-        scan.setEnabled(true);
-        Connector.getInstance().unbindDevice();
-        handler2.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bluetoothAdapter.disable();
-            }
-        },500);
-
-        progressBar.setVisibility(View.INVISIBLE);
-        textScanning.setText(R.string.Esperando);
-        textScanning.setTextColor(getColor(R.color.white));
-        bond_status.setText(R.string.tEnlaceDesenlazado);
-        conn_status.setText(R.string.tConexionDesconectado);
-        battery.setText("");
-        conn_status.setTextColor(Color.WHITE);
-        mac.setTextColor(Color.WHITE);
+        if (bluetoothAdapter.isEnabled()) {
+            Log.i("service123", "unpair");
+            Connector.getInstance().unbindDevice();
+            scan.setEnabled(true);
+            handler2.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    bluetoothAdapter.disable();
+                }
+            }, 2000);
+            progressBar.setVisibility(View.INVISIBLE);
+            textScanning.setText(R.string.Esperando);
+            textScanning.setTextColor(getColor(R.color.white));
+            bond_status.setText(R.string.tEnlaceDesenlazado);
+            conn_status.setText(R.string.tConexionDesconectado);
+            battery.setText("");
+            conn_status.setTextColor(Color.WHITE);
+            mac.setTextColor(Color.WHITE);
+        }
     }
 
     @Override
     public void onScanFinished() {
         progressBar.setVisibility(View.INVISIBLE);
         textScanning.setText(R.string.FalloConexion);
+        scan.setEnabled(true);
     }
 
     @Override
@@ -353,6 +343,7 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            unpair.setEnabled(true);
                             progressBar.setVisibility(View.INVISIBLE);
                             booleanBonded = true;
                             textScanning.setText(R.string.ListoManejar);
@@ -404,6 +395,8 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
             case 0:
                 if (bluetoothAdapter.isEnabled()) {
                     Connector.getInstance().scan(this);
+                } else {
+                    scan.setEnabled(true);
                 }
                 break;
         }
