@@ -1,5 +1,6 @@
 package com.example.luis9.xperto_plus;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.luis9.xpertp.R;
 
 import java.util.StringTokenizer;
 import java.util.Timer;
@@ -51,6 +53,7 @@ public class serviceInternet extends Service {
     int contTotal = 0;
     Timer timer = new Timer();
     boolean booleanTermino;
+    String ip = "http://smarth.xperto.com.mx/registrovar/index.php?usuario=";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -123,9 +126,9 @@ public class serviceInternet extends Service {
                         stringTokenBpmax[4] = tokenDataBpmax.nextToken();
                         stringTokenBpmax[5] = tokenDataBpmax.nextToken();
                         stringTokenBpmax[6] = tokenDataBpmax.nextToken();
-                        VolleyPetition("http://meddataa.sytes.net/registrovar/index.php?correo=" + stringEmail + "&usuario=" + stringID+
-                                "&var=" + stringTokenBpmax[1] + "&valor=" + stringTokenBpmax[2] + "&fecha=" + stringTokenBpmax[3]
-                                + "&hora=" + stringTokenBpmax[4] + "&velocidad=" + stringTokenBpmax[5] + "&diagnostico=" + stringTokenBpmax[6]);
+                        VolleyPetition(ip + stringID + "&var=" + stringTokenBpmax[1] + "&valor=" + stringTokenBpmax[2] + "&fecha=" +
+                                stringTokenBpmax[3] + "&hora=" + stringTokenBpmax[4] + "&velocidad=" + stringTokenBpmax[5] + "&diagnostico="
+                                + stringTokenBpmax[6]);
                         //
                         stringTokenBpmin[1] = tokenDataBpmin.nextToken();
                         stringTokenBpmin[2] = tokenDataBpmin.nextToken();
@@ -133,9 +136,9 @@ public class serviceInternet extends Service {
                         stringTokenBpmin[4] = tokenDataBpmin.nextToken();
                         stringTokenBpmin[5] = tokenDataBpmin.nextToken();
                         stringTokenBpmin[6] = tokenDataBpmin.nextToken();
-                        VolleyPetition("http://meddataa.sytes.net/registrovar/index.php?correo=" + stringEmail + "&usuario=" + stringID+
-                                "&var=" + stringTokenBpmin[1] + "&valor=" + stringTokenBpmin[2] + "&fecha=" + stringTokenBpmin[3]
-                                + "&hora=" + stringTokenBpmin[4] + "&velocidad=" + stringTokenBpmin[5] + "&diagnostico=" + stringTokenBpmin[6]);
+                        VolleyPetition(ip + stringID + "&var=" + stringTokenBpmin[1] + "&valor=" + stringTokenBpmin[2] + "&fecha=" +
+                                stringTokenBpmin[3] + "&hora=" + stringTokenBpmin[4] + "&velocidad=" + stringTokenBpmin[5] + "&diagnostico="
+                                + stringTokenBpmin[6]);
                         //
                     }
                     //
@@ -148,9 +151,9 @@ public class serviceInternet extends Service {
                         stringTokenBr[4] = tokenDataBr.nextToken();
                         stringTokenBr[5] = tokenDataBr.nextToken();
                         stringTokenBr[6] = tokenDataBr.nextToken();
-                        VolleyPetition("http://meddataa.sytes.net/registrovar/index.php?correo=" + stringEmail + "&usuario=" + stringID+
-                                "&var=" + stringTokenBr[1] + "&valor=" + stringTokenBr[2] + "&fecha=" + stringTokenBr[3]
-                                + "&hora=" + stringTokenBr[4] + "&velocidad=" + stringTokenBr[5] + "&diagnostico=" + stringTokenBr[6]);
+                        VolleyPetition(ip + stringID + "&var=" + stringTokenBr[1] + "&valor=" + stringTokenBr[2] + "&fecha=" +
+                                stringTokenBr[3] + "&hora=" + stringTokenBr[4] + "&velocidad=" + stringTokenBr[5] + "&diagnostico=" +
+                                stringTokenBr[6]);
                     }
                     //
                     for (int d = 1; d <= contMood; d++) {
@@ -162,9 +165,9 @@ public class serviceInternet extends Service {
                         stringTokenMood[4] = tokenDataMood.nextToken();
                         stringTokenMood[5] = tokenDataMood.nextToken();
                         stringTokenMood[6] = tokenDataMood.nextToken();
-                        VolleyPetition("http://meddataa.sytes.net/registrovar/index.php?correo=" + stringEmail + "&usuario=" + stringID+
-                                "&var=" + stringTokenMood[1] + "&valor=" + stringTokenMood[2] + "&fecha=" + stringTokenMood[3]
-                                + "&hora=" + stringTokenMood[4] + "&velocidad=" + stringTokenMood[5] + "&diagnostico=" + stringTokenMood[6]);
+                        VolleyPetition(ip + stringID + "&var=" + stringTokenMood[1] + "&valor=" + stringTokenMood[2] + "&fecha=" +
+                                stringTokenMood[3] + "&hora=" + stringTokenMood[4] + "&velocidad=" + stringTokenMood[5] + "&diagnostico=" +
+                                stringTokenMood[6]);
                     }
                     //
                     for (int f = 1; f <= contFatigue; f++) {
@@ -176,9 +179,9 @@ public class serviceInternet extends Service {
                         stringTokenFatigue[4] = tokenDataFatigue.nextToken();
                         stringTokenFatigue[5] = tokenDataFatigue.nextToken();
                         stringTokenFatigue[6] = tokenDataFatigue.nextToken();
-                        VolleyPetition("http://meddataa.sytes.net/registrovar/index.php?correo=" + stringEmail + "&usuario=" + stringID+
-                                "&var=" + stringTokenFatigue[1] + "&valor=" + stringTokenFatigue[2] + "&fecha=" + stringTokenFatigue[3]
-                                + "&hora=" + stringTokenFatigue[4] + "&velocidad=" + stringTokenFatigue[5] + "&diagnostico=" + stringTokenFatigue[6]);
+                        VolleyPetition(ip + stringID + "&var=" + stringTokenFatigue[1] + "&valor=" + stringTokenFatigue[2] + "&fecha=" +
+                                stringTokenFatigue[3] + "&hora=" + stringTokenFatigue[4] + "&velocidad=" + stringTokenFatigue[5]
+                                + "&diagnostico=" + stringTokenFatigue[6]);
                     }
                     for (int g = 1; g <= contHr; g++) {
                         tokenDataHr = new StringTokenizer(stringHrSaved[g], ",");
@@ -189,8 +192,7 @@ public class serviceInternet extends Service {
                         stringTokenHr[4] = tokenDataHr.nextToken();
                         stringTokenHr[5] = tokenDataHr.nextToken();
                         stringTokenHr[6] = tokenDataHr.nextToken();
-                        VolleyPetition("http://meddataa.sytes.net/registrovar/index.php?correo=" + stringEmail + "&usuario=" + stringID+
-                                "&var=" + stringTokenHr[1] + "&valor=" + stringTokenHr[2] + "&fecha=" + stringTokenHr[3]
+                        VolleyPetition(ip + stringID + "&var=" + stringTokenHr[1] + "&valor=" + stringTokenHr[2] + "&fecha=" + stringTokenHr[3]
                                 + "&hora=" + stringTokenHr[4] + "&velocidad=" + stringTokenHr[5] + "&diagnostico=" + stringTokenHr[6]);
                     }
                 }

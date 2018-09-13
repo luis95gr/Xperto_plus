@@ -159,6 +159,7 @@ public class diagnosticoR extends AppCompatActivity {
             chronometer.setVisibility(View.VISIBLE);
             textMidiendo.setVisibility(View.VISIBLE);
             iniciar.setEnabled(false);
+            iniciar.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.md_red_A400)));
             detalles.setVisibility(View.INVISIBLE);
             startcountDownTimerMediciones();
             progressBar.animate();
@@ -415,6 +416,7 @@ public class diagnosticoR extends AppCompatActivity {
                 chronometer.stop();
                 textMidiendo.setText("TERMINADO");
                 iniciar.setEnabled(true);
+                iniciar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("0099ff")));
                 detalles.setVisibility(View.VISIBLE);
                 VolleyPetition(ip + spLogin.getString("id","id") + "&hr=" + hr + "&fatiga=" + fatigue + "&mood=" + mood +
                     "&br=" + br + "&bpmax=" + max + "&bpmin" + min + "&hora=" + hour() + "&fecha=" + dates());

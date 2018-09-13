@@ -1,5 +1,7 @@
 package com.example.luis9.xperto_plus;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -63,6 +65,7 @@ public class main extends AppCompatActivity {
     int fatiga;
     Animation animation;
     ImageView imageView;
+    boolean regresar = false;
 
 
 
@@ -99,8 +102,7 @@ public class main extends AppCompatActivity {
             intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
             startActivityForResult(intent,1);
         }
-        //VolleyPetition(ip + stringId);
-        //VolleyPetition(ip + "2");
+        //
         textDuracion.setText(spLogin.getString("duracion","0"));
         textFecha.setText(spLogin.getString("fecha","0"));
         textVeloc.setText(spLogin.getString("velocidad","0"));
@@ -250,7 +252,6 @@ public class main extends AppCompatActivity {
         assert bmb != null;
         bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_3);
         bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_3);
-        //bmb.setBackgroundResource(R.drawable.round_border);
         for (int i = 0; i < bmb.getPiecePlaceEnum().pieceNumber(); i++) {
             HamButton.Builder builder = new HamButton.Builder()
                     .normalImageRes(images[i])
@@ -299,9 +300,14 @@ public class main extends AppCompatActivity {
             return false;
         }
     }
-    @Override
+    /*@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return (keyCode == KeyEvent.KEYCODE_BACK ? true : super.onKeyDown(keyCode, event));
+    }*/
+
+    @Override
+    public void onBackPressed(){
+        if (regresar) super.onBackPressed();
     }
 
 }

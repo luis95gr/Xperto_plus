@@ -102,6 +102,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     DeviceItem deviceItem = null;
     int intCount;
     BluetoothAdapter bluetoothAdapter;
+    boolean regresar = true;
     //
     //VELOCIDAD VARIABLES
     static final int REQUEST_LOCATION = 1;
@@ -143,7 +144,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     double promedioSpeed = 0;
     int contadorFatigaCansado, contadorFatigaNormal, contadorFatigaMuyCansado, contadorMoodEmocionado,
             contadorMoodDeprimido, contadorMoodCalmado;
-    boolean booleanBonded,booleanFalloConect = false;
+    boolean booleanBonded,booleanFalloConect,booleanCountDown = false;
     //MAPA
     int zoom = 19;
     boolean camera = true;
@@ -303,7 +304,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     protected void onResume() {
         super.onResume();
         registerReceiver(heloMeasurementReceiver, intentFilter);
-        Connector.getInstance().stopStepsHRDynamicMeasurement();
+        //Connector.getInstance().stopStepsHRDynamicMeasurement();
     }
 
     public void zoom(View view){
@@ -323,6 +324,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     }
 
     public void iniciar(View view){
+        regresar = false;
         horaInicio = hour();
         wakeLock.acquire();
         wifiLock.acquire();
@@ -341,6 +343,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     }
 
     public void terminar(View view){
+        regresar = true;
         wakeLock.release();
         wifiLock.release();
         booleanStart = false;
@@ -499,6 +502,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
 
     //////////////////////MEDICIONES TIMERS////////////////////////////////////////////
     public void startcountDownTimer() {
+        booleanCountDown = true;
         countDownTimer = new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -695,8 +699,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            textUltimaMedicion.setText("Animo: " + mood);
-
+                            //textUltimaMedicion.setText("Animo: " + mood);
                         }
                     });
                     //PROMEDIO
@@ -741,6 +744,8 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                 } else if (intent.getAction().equals(BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE)) {
                     String message = intent.getStringExtra(INTENT_MEASUREMENT_WRITE_FAILURE);
                     Toast.makeText(conduccion.this, message, Toast.LENGTH_LONG).show();
+                    Connector.getInstance().unbindDevice();
+                    booleanFalloConect = true;
                     //
                 } else if (intent.getAction().equals(BROADCAST_ACTION_STEPS_MEASUREMENT)) {
                     steps = intent.getStringExtra(INTENT_KEY_STEPS_MEASUREMENT);
@@ -753,7 +758,12 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                     textBle.setTextColor(Color.parseColor("#F44336"));
                     mTts.speak(getString(R.string.DispositivoDesconectado),0,null,"desconectado");
                     vibrator.vibrate(800);
-                    countDownTimer.cancel();
+                    //
+                    if (booleanCountDown) {
+                        booleanCountDown = false;
+                        countDownTimer.cancel();
+                    }
+                    //
                     timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
                     chronometer.stop();
                     switch (intCount){
@@ -801,7 +811,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                     Log.i("service123","envio mensaje");
                     Notification terminar = new Notification.Builder(getApplicationContext())
                             .setContentTitle("Administrador de cargas")
-                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setSmallIcon(R.mipmap.fr)
                             .setContentText("Datos guardados en la base de datos")
                             .setAutoCancel(true).build();
                     notificationManager.notify(1,terminar);
@@ -829,16 +839,17 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         }
     }
     public void guardarDatos () {
-
-        intentService = new Intent(conduccion.this,serviceInternet.class);
-        startService(intentService);
-        //
-        Notification start = new Notification.Builder(this)
+        notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        Notification start = new Notification.Builder(getApplicationContext())
                 .setContentTitle("Administrador de cargas")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.fr)
+                .setColor(getColor(R.color.green))
                 .setContentText("Esperando conexión a internet para subir datos")
                 .setAutoCancel(true).build();
         notificationManager.notify(0,start);
+        //
+        intentService = new Intent(conduccion.this,serviceInternet.class);
+        startService(intentService);
 
         SharedPreferences.Editor spMeasuresSavedEditor = spMeasuresSaved.edit();
         if (booleanBpMeasure) {
@@ -1330,11 +1341,12 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+    }
 
-        // Add a marker in Sydney and move the camera
-        /*LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
+    @Override
+    public void onBackPressed(){
+        if (regresar) super.onBackPressed();
+        else Toast.makeText(this, "Termina el viaje para poder regresar", Toast.LENGTH_LONG).show();
     }
 
 }

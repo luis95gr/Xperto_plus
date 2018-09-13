@@ -14,7 +14,7 @@ import com.worldgn.connector.ILoginCallback;
 public class cuentaHelo extends AppCompatActivity {
 
     //VARIABLES
-    //String email = "xpertoappf@gmail.com";
+    //String email = "xpertoappc@gmail.com";
     String email = "healthcare4pef@gmail.com";
     String key = "152384277176254522";
     String token = "B9B2E74B829AC1FCE45FFF44BE772CE8C5DD2200";
