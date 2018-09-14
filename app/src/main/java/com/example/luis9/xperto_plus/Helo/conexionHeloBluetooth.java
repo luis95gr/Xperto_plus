@@ -213,10 +213,7 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
     }
 
     public void comenzar(View view){
-        if (!bond_status.getText().toString().equalsIgnoreCase("enlazado") || !bond_status.getText().toString().equalsIgnoreCase("bonded")){
-            Snackbar snackbar = Snackbar.make(findViewById(R.id.conexionBlue), R.string.DispositivoNoConectado, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        } else {
+        if (bond_status.getText().toString().equalsIgnoreCase("enlazado") || bond_status.getText().toString().equalsIgnoreCase("bonded")){
             if (spConnectionHelo.getBoolean("diagnosticoR",false)) {
                 SharedPreferences.Editor spDiagnosticoEditor = spDiagnostico.edit();
                 spDiagnosticoEditor.putBoolean("diagnosticoR",false);
@@ -225,6 +222,9 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
             } else if (!spConnectionHelo.getBoolean("diagnosticoR",false)) {
                 startActivity(new Intent(conexionHeloBluetooth.this, conduccion.class));
             }
+        } else {
+            Snackbar snackbar = Snackbar.make(findViewById(R.id.conexionBlue), R.string.DispositivoNoConectado, Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
     }
 
