@@ -430,12 +430,34 @@ public class diagnosticoR extends AppCompatActivity {
     protected String hrDiagnostic(int intMeasureHr){
         //StringdiagnosticHr = "Normal";
         if (spLogin.getString("gender","Masculino").equalsIgnoreCase("Masculino")) {
-            doubleMaxHr = 203.7 / (1 + Math.exp(0.033 * (age() - 104.3)));
+            //doubleMaxHr = 203.7 / (1 + Math.exp(0.033 * (age() - 104.3)));
+            if (age() >= 20 && age() <= 39){
+                doubleMaxHr = (double)86;
+            }
+            if (age() >= 40 && age() <= 49){
+                doubleMaxHr = (double)90;
+            }
+            if (age() >= 50){
+                doubleMaxHr = (double)90;
+            }
         }
         if (spLogin.getString("gender","Masculino").equalsIgnoreCase("Femenino")) {
-            doubleMaxHr = 190.2 / (1 + Math.exp(0.0453 * (age() - 107.5)));
+            //doubleMaxHr = 190.2 / (1 + Math.exp(0.0453 * (age() - 107.5)));
+            if (age() >= 20 && age() <= 29){
+                doubleMaxHr = (double)96;
+            }
+            if (age() >= 30 && age() <= 39){
+                doubleMaxHr = (double)98;
+            }
+            if (age() >= 40 && age() <= 49){
+                doubleMaxHr = (double)100;
+            }
+            if (age() >= 50){
+                doubleMaxHr = (double)104;
+            }
         }
-        doubleMinHr = -5.4*((double)(spLogin.getInt("exInt",1)))+69.2;
+        doubleMinHr = 5*((double)(spLogin.getInt("exInt",1)))+35;
+        //doubleMinHr = -5.4*((double)(spLogin.getInt("exInt",1)))+69.2;
         //
         //OUT OF RANGE
         if (intMeasureHr < doubleMinHr || intMeasureHr > doubleMaxHr){
@@ -447,7 +469,7 @@ public class diagnosticoR extends AppCompatActivity {
             }
         }
         //NORMAL RANGE
-        if (intMeasureHr <= doubleMaxHr-90 && intMeasureHr >= doubleMinHr+10 ){
+        if (intMeasureHr <= doubleMaxHr && intMeasureHr >= doubleMinHr ){
             stringDiagnosticHr = "Valor normal";
         }
         //BRADICARDIA
@@ -455,7 +477,7 @@ public class diagnosticoR extends AppCompatActivity {
             stringDiagnosticHr = "Ligera bradicardia";
         }
         //TAQUICARDIA
-        if (intMeasureHr < doubleMaxHr && intMeasureHr > doubleMaxHr-90){
+        if (intMeasureHr < doubleMaxHr && intMeasureHr > doubleMaxHr-10){
             stringDiagnosticHr = "Ligera taquicardia";
         }
         //
