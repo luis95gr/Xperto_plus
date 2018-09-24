@@ -191,6 +191,12 @@ public class conexionHeloBluetooth extends AppCompatActivity implements ScanCall
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(heloMeasurementReceiver);
+    }
+
+    @Override
     public void onScanStarted() {
         runOnUiThread(new Runnable() {
             @Override
