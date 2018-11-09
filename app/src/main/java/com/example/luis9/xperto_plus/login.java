@@ -1,11 +1,13 @@
 package com.example.luis9.xperto_plus;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -32,6 +34,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 public class login extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     //VARIABLES
@@ -51,7 +55,6 @@ public class login extends AppCompatActivity implements TextToSpeech.OnInitListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
-        setupWindowAnimations();
         //CAST
         animationView = (LottieAnimationView)findViewById(R.id.animation_view);
         animationView.setMinAndMaxFrame(0,20);
@@ -81,13 +84,17 @@ public class login extends AppCompatActivity implements TextToSpeech.OnInitListe
     //BUTTONS
     public void logins(View view){
         if (!internet()){
-            Toast.makeText(this, "Paired device not found", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No hay internet", Toast.LENGTH_LONG).show();
+        } else {
+            VolleyPetition("http://" + ip + "correo=" + etEmail.getText().toString()
+                    + "&password=" + etPass.getText().toString());
+            VolleyPetition2("http://smarth.xperto.com.mx/mean/recuperajson.php?usuario=" + spLogin.getString("id","id"));
+            //VolleyPetition2("http://smarth.xperto.com.mx/mean/recuperajson.php?usuario=" + "2");
         }
-        VolleyPetition("http://"+ ip +"correo=" + etEmail.getText().toString()
-                + "&password=" +etPass.getText().toString());
-        //VolleyPetition2("http://smarth.xperto.com.mx/mean/recuperajson.php?usuario=" + spLogin.getString("id","id"));
-        VolleyPetition2("http://smarth.xperto.com.mx/mean/recuperajson.php?usuario=" + "2");
-    }
+        /*((ActivityManager)this.getSystemService(ACTIVITY_SERVICE))
+                .clearApplicationUserData();*/
+
+        }
     public void create(View view){
         Intent i = new Intent(getApplicationContext(), createAccount.class);
         startActivity(i);
@@ -219,12 +226,8 @@ public class login extends AppCompatActivity implements TextToSpeech.OnInitListe
         mieditor.putInt("acceso",acceso);
         mieditor.apply();
     }
-    private void setupWindowAnimations() {
-        Slide slide = new Slide();
-        slide.setDuration(2000);
-        getWindow().setExitTransition(slide);
-        getWindow().setEnterTransition(slide);
-    }
+
+
 
 
 }

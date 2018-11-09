@@ -1,5 +1,6 @@
 package com.example.luis9.xperto_plus;
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -51,6 +52,8 @@ import com.worldgn.connector.Connector;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 public class main extends AppCompatActivity {
 
@@ -227,6 +230,10 @@ public class main extends AppCompatActivity {
                 spLoginEditor.putBoolean("success",false);
                 spLoginEditor.apply();
                 startActivity(new Intent(main.this,login.class));
+                deleteCache(this);
+                ((ActivityManager)this.getSystemService(ACTIVITY_SERVICE))
+                        .clearApplicationUserData();
+                Toast.makeText(this, "Cache eliminado", Toast.LENGTH_SHORT).show();
                 finish();
 
             default:
@@ -300,10 +307,29 @@ public class main extends AppCompatActivity {
             return false;
         }
     }
-    /*@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return (keyCode == KeyEvent.KEYCODE_BACK ? true : super.onKeyDown(keyCode, event));
-    }*/
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) { e.printStackTrace();}
+    }
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if(dir!= null && dir.isFile()) {
+            return dir.delete();
+        } else if(dir.isFile()) { return dir.delete(); }
+        else {
+            return false;
+        }
+    }
 
     @Override
     public void onBackPressed(){

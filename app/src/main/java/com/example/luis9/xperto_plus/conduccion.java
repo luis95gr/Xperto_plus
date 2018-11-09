@@ -148,6 +148,8 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     //MAPA
     int zoom = 19;
     boolean camera = true;
+    double latitude;
+    double longitude;
     //
     public final String BROADCAST_ACTION_BP_MEASUREMENT = "com.worldgn.w22.ble.BluetoothLeService.ACTION_MAIN_DATA_BP";
     public static final String BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE = "com.worldgn.connector_plus.MEASURE_WRITE_FAILURE";
@@ -257,8 +259,8 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                 textDis.setText(stringSpeed + " km/hr");
                 //
                 //GOOGLE MAPS
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
                 Geocoder geocoder = new Geocoder(getApplicationContext());
                 try {
                     List<Address> addresses =
@@ -712,7 +714,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                         VolleyPetition(ip + stringID + "&var=" + "Mood" + "&valor=" + mood + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
                                 "-");
-                    } else guardarDatos();
+                    } //else guardarDatos();
                     //
                 } else if (intent.getAction().equals(BROADCAST_ACTION_HR_MEASUREMENT)) {
                     booleanHrMeasure = true;
@@ -808,6 +810,8 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
 
                 }
                 else if (intent.getAction().equals("enviado")){
+                    intentService = new Intent(conduccion.this,serviceInternet.class);
+                    stopService(intentService);
                     Log.i("service123","envio mensaje");
                     Notification terminar = new Notification.Builder(getApplicationContext())
                             .setContentTitle("Administrador de cargas")

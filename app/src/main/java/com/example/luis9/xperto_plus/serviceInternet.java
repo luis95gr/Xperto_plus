@@ -203,33 +203,36 @@ public class serviceInternet extends Service {
     }
 
     private void VolleyPetition(String URL) {
-        Log.i("url", "" + URL);
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                //DATA SENT
-                contTotal++;
-                Log.i("service123","ENVIADOS:" +contTotal);
-                if (contTotal == contBp*2 + contBr + contMood + contFatigue + contHr){
-                    Log.i("service123","CONTOTAL:" +contTotal);
-                    booleanTermino = true;
-                    contTotal = 0;
-                    timer.cancel();
-                    stopSelf();
+        if (!booleanTermino) {
+            Log.i("url", "" + URL);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    //DATA SENT
+                    contTotal++;
+                    Log.i("service123", "ENVIADOS:" + contTotal);
+                    if (contTotal == contBp * 2 + contBr + contMood + contFatigue + contHr) {
+                        contBp = contBr = contMood = contFatigue = contHr = 0;
+                        Log.i("service123", "CONTOTAL:" + contTotal);
+                        booleanTermino = true;
+                        contTotal = 0;
+                        timer.cancel();
+                        stopSelf();
+                    }
                 }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Error!" , Toast.LENGTH_LONG).show();
-            }
-        });
-        queue.add(stringRequest);
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_LONG).show();
+                }
+            });
+            queue.add(stringRequest);
+        }
     }
 
     private void sendBroadcast (){
-        Intent intent = new Intent ("enviado"); //put the same message as in the filter you used in the activity when registering the receiver
+        Intent intent = new Intent ("enviado");
         intent.putExtra("enviado", true);
         sendBroadcast(intent);
     }
