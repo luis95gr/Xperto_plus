@@ -148,8 +148,8 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     //MAPA
     int zoom = 19;
     boolean camera = true;
-    double latitude;
-    double longitude;
+    double latitude=0;
+    double longitude=0;
     //
     public final String BROADCAST_ACTION_BP_MEASUREMENT = "com.worldgn.w22.ble.BluetoothLeService.ACTION_MAIN_DATA_BP";
     public static final String BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE = "com.worldgn.connector_plus.MEASURE_WRITE_FAILURE";
@@ -334,7 +334,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         Connector.getInstance().measureMF();
         textMidiendo.setText(R.string.FatigaSin);
         VolleyPetition(ip + stringID + "&var=" + "INICIO" + "&valor=" + "INICIO" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "INICIO" + "&diagnostico=" +"INICIO");
+                + "&hora=" + hour() + "&velocidad=" + "INICIO" + "&diagnostico="+"&latitude="+latitude+"&longitude="+longitude);
         //BUTTONS
         linearLayoutIniciar.setVisibility(View.INVISIBLE);
         linearLayoutPausar.setVisibility(View.VISIBLE);
@@ -359,7 +359,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         Toast.makeText(this, "VIAJE TERMINADO", Toast.LENGTH_SHORT).show();
         //
         VolleyPetition(ip + stringID + "&var=" + "FIN" + "&valor=" + "FIN" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "FIN" + "&diagnostico=" +"FIN");
+                + "&hora=" + hour() + "&velocidad=" + "FIN" + "&diagnostico=" +"FIN"+"&latitude="+latitude+"&longitude="+longitude);
         //TIEMPO
         tiempo = chronometer.getText().toString();
         //PROMEDIOS
@@ -486,7 +486,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
         chronometer.stop();
         VolleyPetition(ip + stringID + "&var=" + "PAUSADO" + "&valor=" + "PAUSADO" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "PAUSADO" + "&diagnostico=" +"PAUSADO");
+                + "&hora=" + hour() + "&velocidad=" + "PAUSADO" + "&diagnostico=" +"PAUSADO"+"&latitude="+latitude+"&longitude="+longitude);
     }
 
     public void reanudar(View view){
@@ -499,7 +499,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         startcountDownTimer();
         startcountDownTimerHr();
         VolleyPetition(ip + stringID + "&var=" + "REANUDADO" + "&valor=" + "REANUDADO" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "REANUDADO" + "&diagnostico=" +"REANUDADO");
+                + "&hora=" + hour() + "&velocidad=" + "REANUDADO" + "&diagnostico=" +"REANUDADO"+"&latitude="+latitude+"&longitude="+longitude);
     }
 
     //////////////////////MEDICIONES TIMERS////////////////////////////////////////////
@@ -616,11 +616,11 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                         booleanBpMeasure = false;
                         VolleyPetition(ip + stringID + "&var=" + "BPmax" + "&valor=" + max + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min)));
+                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min))+"&latitude="+latitude+"&longitude="+longitude);
                         //
                         VolleyPetition(ip + stringID + "&var=" + "BPmin" + "&valor=" + min + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min)));
+                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min))+"&latitude="+latitude+"&longitude="+longitude);
                         //
                     } else guardarDatos();
                     //SPEAK
@@ -650,7 +650,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                         //
                         VolleyPetition(ip + stringID + "&var=" + "BR" + "&valor=" + br + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                brDiagnostic(Integer.parseInt(br)));
+                                brDiagnostic(Integer.parseInt(br))+"&latitude="+latitude+"&longitude="+longitude);
                         //
                     } else guardarDatos();
                     //SPEAK
@@ -684,7 +684,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                         booleanFatigueMeasure = false;
                         VolleyPetition(ip + stringID + "&var=" + "Fatiga" + "&valor=" + fatigue + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                "-");
+                                "-"+"&latitude="+latitude+"&longitude="+longitude);
                     } else guardarDatos();
                     //
                     //SPEAK
@@ -713,7 +713,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                         booleanMoodMeasure = false;
                         VolleyPetition(ip + stringID + "&var=" + "Mood" + "&valor=" + mood + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                "-");
+                                "-"+"&latitude="+latitude+"&longitude="+longitude);
                     } //else guardarDatos();
                     //
                 } else if (intent.getAction().equals(BROADCAST_ACTION_HR_MEASUREMENT)) {
@@ -736,7 +736,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                         //
                         VolleyPetition(ip + stringID + "&var=" + "HR" + "&valor=" + hr + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                hrDiagnostic(Integer.parseInt(hr)));
+                                hrDiagnostic(Integer.parseInt(hr))+"&latitude="+latitude+"&longitude="+longitude);
                     } else guardarDatos();
                     //SPEAK
                     if (booleanSonido){
@@ -778,7 +778,8 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                     reconectar();
                     //
                     VolleyPetition(ip + stringID + "&var=" + "DESCONEXION" + "&valor=" + "DESCONEXION" + "&fecha=" + dates()
-                            + "&hora=" + hour() + "&velocidad=" + "DESCONEXION" + "&diagnostico=" +"DESCONEXION");
+                            + "&hora=" + hour() + "&velocidad=" + "DESCONEXION" + "&diagnostico=" +"DESCONEXION"+"&latitude="+latitude+
+                            "&longitude="+longitude);
                     //
                 } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_CONNECTED)){
                     handlerReconect.postDelayed(new Runnable() {
