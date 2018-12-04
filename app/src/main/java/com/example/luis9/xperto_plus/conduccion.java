@@ -20,6 +20,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -76,6 +77,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     //VARIABLES
     SupportMapFragment mapFragment;
     SharedPreferences spLogin;
+    String bateria,bateriacel;
     private GoogleMap mMap;
     Chronometer chronometer;
     ProgressBar progressBar;
@@ -87,7 +89,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     String stringDate, stringHour;
     LinearLayout linearLayoutIniciar, linearLayoutPausar, linearLayoutReanudar;
     boolean booleanStart = true, booleanChronometer, booleanSonido = true;
-    CountDownTimer countDownTimer, countDownTimerHr, countDownTimerBp, countDownTimerBr, countDownTimerMF;
+    CountDownTimer countDownTimer, countDownTimerHr, countDownTimerBp, countDownTimerBr, countDownTimerMF, countDownTimerOx;
     String stringEmail, stringPass, stringID;
     int conduccion = 1;
     String steps;
@@ -121,12 +123,12 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     String ip = "http://smarth.xperto.com.mx/registrovar/index.php?usuario=";
     //
     //VARIABLES DE INTERNET
-    boolean booleanBpMeasure, booleanBrMeasure, booleanMoodMeasure, booleanFatigueMeasure, booleanHrMeasure = false;
+    boolean booleanBpMeasure, booleanBrMeasure, booleanMoodMeasure, booleanFatigueMeasure, booleanHrMeasure, booleanOxMeasure = false;
     int contBp, contBr, contMood, contFatigue, contHr = 0;
     String stringBpmaxSaved, stringBpminSaved, stringBrSaved, stringMoodSaved, stringFatigueSaved, stringHrSaved;
     String stringDateBpSaved, stringDateBrSaved, stringDateMoodSaved, stringDateFatigueSaved, stringDateHrSaved;
     String stringHourBpSaved, stringHourBrSaved, stringHourMoodSaved, stringHourFatigueSaved, stringHourHrSaved;
-    String max, min, br, fatigue, hr, mood;
+    String max, min, br, fatigue, hr, mood, oxygen;
     SharedPreferences spMeasuresSaved;
     Intent intentService;
     boolean booleanServiceStarted;
@@ -151,7 +153,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     double latitude=0;
     double longitude=0;
     //
-    public final String BROADCAST_ACTION_BP_MEASUREMENT = "com.worldgn.w22.ble.BluetoothLeService.ACTION_MAIN_DATA_BP";
+    public static final String BROADCAST_ACTION_BP_MEASUREMENT = "com.worldgn.w22.ble.BluetoothLeService.ACTION_MAIN_DATA_BP";
     public static final String BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE = "com.worldgn.connector_plus.MEASURE_WRITE_FAILURE";
     public static final String BROADCAST_ACTION_HR_MEASUREMENT = "com.worldgn.connector_plus.HR_MEASUREMENT";
     public static final String BROADCAST_ACTION_BR_MEASUREMENT = "com.worldgn.connector_plus.BR_MEASUREMENT";
@@ -162,6 +164,16 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     public static final String BROADCAST_ACTION_HELO_CONNECTED = "com.worldgn.connector_plus.ACTION_HELO_CONNECTED";
     public static final String BROADCAST_ACTION_HELO_BONDED = "com.worldgn.connector_plus.ACTION_HELO_BONDED";
     public static final String BROADCAST_ACTION_HELO_UNBONDED = "com.worldgn.connector_plus.ACTION_HELO_UNBONDED";
+    public static final String BROADCAST_ACTION_BUTTON = "com.worldgn.connector_plus.BUTTON";
+    public static final String BROADCAST_ACTION_BATTERY = "com.worldgn.connector_plus.BATTERY";
+    public static final String BROADCAST_ACTION_APPVERSION_MEASUREMENT = "com.worldgn.connector_plus.APPVERSION_MEASUREMENT";
+    public static final String BROADCAST_ACTION_OXYGEN_MEASUREMENT = "com.worldgn.w22.ble.BluetoothLeService.ACTION_MAIN_DATA_OXYGEN";
+
+
+
+
+
+
     //
     public static final String INTENT_KEY_HR_MEASUREMENT = "HR_MEASUREMENT";
     public static final String INTENT_KEY_BR_MEASUREMENT = "BR_MEASUREMENT";
@@ -171,6 +183,10 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     public static final String INTENT_KEY_FATIGUE_MEASUREMENT = "FATIGUE_MEASUREMENT";
     public static final String INTENT_MEASUREMENT_WRITE_FAILURE = "MEASUREMENT_WRITE_FAILURE";
     public static final String INTENT_KEY_STEPS_MEASUREMENT = "STEPS_MEASUREMENT";
+    public static final String INTENT_KEY_BATTERY = "BATTERY";
+    public static final String INTENT_KEY_OXYGEN_MEASUREMENT = "OXYGEN_MEASUREMENT";
+
+
     //
 
     @Override
@@ -235,6 +251,10 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         intentFilter.addAction(BROADCAST_ACTION_HELO_DISCONNECTED);
         intentFilter.addAction(BROADCAST_ACTION_HELO_CONNECTED);
         intentFilter.addAction(BROADCAST_ACTION_HELO_BONDED);
+        intentFilter.addAction(BROADCAST_ACTION_BUTTON);
+        intentFilter.addAction(BROADCAST_ACTION_BATTERY);
+        intentFilter.addAction(BROADCAST_ACTION_OXYGEN_MEASUREMENT);
+        intentFilter.addAction(BROADCAST_ACTION_APPVERSION_MEASUREMENT);
         intentFilter.addAction("enviado");
         //INTERNET CAST
         //
@@ -298,7 +318,9 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
 
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
-        } else locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,locationListener);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        }
         //
     }
 
@@ -334,7 +356,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         Connector.getInstance().measureMF();
         textMidiendo.setText(R.string.FatigaSin);
         VolleyPetition(ip + stringID + "&var=" + "INICIO" + "&valor=" + "INICIO" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "INICIO" + "&diagnostico="+"&latitude="+latitude+"&longitude="+longitude);
+                + "&hora=" + hour() + "&velocidad=" + "0" + "&diagnostico="+"&latitude="+latitude+"&longitude="+longitude+"&bateriacel="+cargaBateria()+"&bateriabanda="+bateria);
         //BUTTONS
         linearLayoutIniciar.setVisibility(View.INVISIBLE);
         linearLayoutPausar.setVisibility(View.VISIBLE);
@@ -359,7 +381,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         Toast.makeText(this, "VIAJE TERMINADO", Toast.LENGTH_SHORT).show();
         //
         VolleyPetition(ip + stringID + "&var=" + "FIN" + "&valor=" + "FIN" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "FIN" + "&diagnostico=" +"FIN"+"&latitude="+latitude+"&longitude="+longitude);
+                + "&hora=" + hour() + "&velocidad=" + "FIN" + "&diagnostico=" +"FIN"+"&latitude="+latitude+"&longitude="+longitude+"&bateriacel="+cargaBateria()+"&bateriabanda="+bateria);
         //TIEMPO
         tiempo = chronometer.getText().toString();
         //PROMEDIOS
@@ -457,6 +479,8 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         intent.putExtra("contadorDeprimidoEnviar",contadorMoodDeprimido);
         intent.putExtra("contadorEmocionadoEnviar",contadorMoodEmocionado);
         intent.putExtra("horaInicio",horaInicio);
+
+
         doublePSpeed.clear();
         intPHr.clear();
         intPBr.clear();
@@ -486,7 +510,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
         chronometer.stop();
         VolleyPetition(ip + stringID + "&var=" + "PAUSADO" + "&valor=" + "PAUSADO" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "PAUSADO" + "&diagnostico=" +"PAUSADO"+"&latitude="+latitude+"&longitude="+longitude);
+                + "&hora=" + hour() + "&velocidad=" + "PAUSADO" + "&diagnostico=" +"PAUSADO"+"&latitude="+latitude+"&longitude="+longitude+"&bateriacel="+cargaBateria()+"&bateriabanda="+bateria);
     }
 
     public void reanudar(View view){
@@ -499,17 +523,17 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         startcountDownTimer();
         startcountDownTimerHr();
         VolleyPetition(ip + stringID + "&var=" + "REANUDADO" + "&valor=" + "REANUDADO" + "&fecha=" + dates()
-                + "&hora=" + hour() + "&velocidad=" + "REANUDADO" + "&diagnostico=" +"REANUDADO"+"&latitude="+latitude+"&longitude="+longitude);
+                + "&hora=" + hour() + "&velocidad=" + "REANUDADO" + "&diagnostico=" +"REANUDADO"+"&latitude="+latitude+"&longitude="+longitude+"&bateriacel="+cargaBateria()+"&bateriabanda="+bateria);
     }
 
     //////////////////////MEDICIONES TIMERS////////////////////////////////////////////
     public void startcountDownTimer() {
         booleanCountDown = true;
-        countDownTimer = new CountDownTimer(60000, 1000) {
+        countDownTimer = new CountDownTimer(70000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
                 progressBar.setMax(100);
-                long pr = (millisUntilFinished / 1000) * 100000 / 60000;
+                long pr = (millisUntilFinished / 500) * 70000 / 100000;
                 int progress = (int) pr;
                 progressBar.setProgress(progress);
             }
@@ -523,7 +547,7 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     //COUNTDOWN MEASURES
     public void startcountDownTimerHr(){
         intCount = 1;
-        countDownTimerHr = new CountDownTimer(60000, 1000) {
+        countDownTimerHr = new CountDownTimer(70000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (!booleanStart) countDownTimerHr.cancel();
@@ -539,23 +563,23 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
     }
     public void startcountDownTimerBp(){
         intCount = 2;
-        countDownTimerBp = new CountDownTimer(60000, 1000) {
+        countDownTimerBp = new CountDownTimer(70000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (!booleanStart) countDownTimerBp.cancel();
             }
             @Override
             public void onFinish() {
-                Connector.getInstance().measureBP();
                 //TEXTS
                 textMidiendo.setText(R.string.PresionSin);
                 startcountDownTimerBr();
+                Connector.getInstance().measureBP();
             }
         }.start();
     }
     public void startcountDownTimerBr(){
         intCount = 3;
-        countDownTimerBr = new CountDownTimer(60000, 1000) {
+        countDownTimerBr = new CountDownTimer(70000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (!booleanStart) countDownTimerBr.cancel();
@@ -565,13 +589,13 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                 Connector.getInstance().measureBr();
                 //TEXTS
                 textMidiendo.setText(R.string.RespiracionSin);
-                startcountDownTimerMF();
+                startcountDownTimerOx();
             }
         }.start();
     }
     public void startcountDownTimerMF(){
         intCount = 4;
-        countDownTimerMF = new CountDownTimer(60000, 1000) {
+        countDownTimerMF = new CountDownTimer(70000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
                 if (!booleanStart) countDownTimerMF.cancel();
@@ -586,16 +610,51 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
         }.start();
     }
 
-    //
+    public void startcountDownTimerOx(){
+        intCount = 5;
+        countDownTimerOx = new CountDownTimer(70000, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                if (!booleanStart) countDownTimerOx.cancel();
+            }
+            @Override
+            public void onFinish() {
+                Connector.getInstance().measureOxygen();
+                //TEXTS
+                textMidiendo.setText("Oxigeno");
+                startcountDownTimerMF();
+            }
+        }.start();
+    }
 
+    public int cargaBateria ()
+    {
+        try
+        {
+            IntentFilter batIntentFilter =
+                    new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent battery =
+                    this.registerReceiver(null, batIntentFilter);
+            int nivelBateria = battery.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            return nivelBateria;
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(),
+                    "Error al obtener estado de la batería",
+                    Toast.LENGTH_SHORT).show();
+            return 0;
+        }
+    }
 
     public class MeasurementReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, final Intent intent) {
+
             if (intent != null && intent.getAction() != null) {
-                //PRESION
+
                 if (intent.getAction().equals(BROADCAST_ACTION_BP_MEASUREMENT)) {
-                    booleanBpMeasure = true;
+                                       booleanBpMeasure = true;
                     max = intent.getStringExtra(INTENT_KEY_BP_MEASUREMENT_MAX);
                     min = intent.getStringExtra(INTENT_KEY_BP_MEASUREMENT_MIN);
                     //
@@ -616,11 +675,11 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                         booleanBpMeasure = false;
                         VolleyPetition(ip + stringID + "&var=" + "BPmax" + "&valor=" + max + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min))+"&latitude="+latitude+"&longitude="+longitude);
+                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min)) + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
                         //
                         VolleyPetition(ip + stringID + "&var=" + "BPmin" + "&valor=" + min + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min))+"&latitude="+latitude+"&longitude="+longitude);
+                                bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min)) + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
                         //
                     } else guardarDatos();
                     //SPEAK
@@ -630,216 +689,310 @@ public class conduccion extends FragmentActivity implements OnMapReadyCallback, 
                     }
                     //
                     //RESPIRACION
-                } else if (intent.getAction().equals(BROADCAST_ACTION_BR_MEASUREMENT)) {
-                    booleanBrMeasure = true;
-                    br = intent.getStringExtra(INTENT_KEY_BR_MEASUREMENT);
+                }
+
+                if (intent.getAction().equals(BROADCAST_ACTION_OXYGEN_MEASUREMENT)) {
+                    booleanOxMeasure=true;
+                    oxygen = intent.getStringExtra(INTENT_KEY_OXYGEN_MEASUREMENT);
                     //
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            textUltimaMedicion.setText("Respiración: " + br);
+                            textUltimaMedicion.setText("Oxigeno: " + oxygen + "%");
                         }
                     });
                     //
                     //PROMEDIO
-                    intPBr.add(Integer.parseInt(br));
-                    doublePSpeed.add(Double.parseDouble(stringSpeed));
-                    //
+
                     if (internet()) {
-                        booleanBrMeasure = false;
-                        //
-                        VolleyPetition(ip + stringID + "&var=" + "BR" + "&valor=" + br + "&fecha=" + dates()
+                        booleanOxMeasure = false;
+                        VolleyPetition(ip + stringID + "&var=" + "Oxygen" + "&valor=" + oxygen + "&fecha=" + dates()
                                 + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                brDiagnostic(Integer.parseInt(br))+"&latitude="+latitude+"&longitude="+longitude);
-                        //
+                                "null" + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+
                     } else guardarDatos();
+                    //
+
                     //SPEAK
                     if (booleanSonido) {
-                        mTts.speak("Tu respiracion es " + brDiagnostic(Integer.parseInt(br)), 0, null, "br");
+                        mTts.speak("Tu oxigeno es " + oxygen,
+                                0, null, "bp");
                     }
                     //
-                    //FATIGA Y ANIMO
-                } else if (intent.getAction().equals(BROADCAST_ACTION_FATIGUE_MEASUREMENT)) {
-                    booleanFatigueMeasure = true;
-                    fatigue = intent.getStringExtra(INTENT_KEY_FATIGUE_MEASUREMENT);
-                    //
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (fatigue.equalsIgnoreCase("tired")){
-                                textUltimaMedicion.setText("Fatiga: Cansado" );
-                            }
-                            if (fatigue.equalsIgnoreCase("Very_Tired")){
-                                textUltimaMedicion.setText("Fatiga: Muy cansado");
-                            }
-                        }
-                    });
-                    //
-                    //PROMEDIO
-                    stringPFatigue.add(fatigue);
-                    Log.i("service123","Fatiga: " + stringPFatigue.get(0));
-                    doublePSpeed.add(Double.parseDouble(stringSpeed));
-                    //
-                    if (internet()) {
-                        booleanFatigueMeasure = false;
-                        VolleyPetition(ip + stringID + "&var=" + "Fatiga" + "&valor=" + fatigue + "&fecha=" + dates()
-                                + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                "-"+"&latitude="+latitude+"&longitude="+longitude);
-                    } else guardarDatos();
-                    //
-                    //SPEAK
-                    if (booleanSonido) {
-                        if (fatigue.equalsIgnoreCase("tired") || fatigue.equalsIgnoreCase("Very_Tired")) {
-                            mTts.speak("Tu nivel de fatiga es cansado ", 0, null, "fatiga");
-                        } else mTts.speak("Tu nivel de fatiga es normal ", 0, null, "fatiga");
-                    }
-                    //
-                } else if (intent.getAction().equals(BROADCAST_ACTION_MOOD_MEASUREMENT)) {
-                    booleanMoodMeasure = true;
-                    mood = intent.getStringExtra(INTENT_KEY_MOOD_MEASUREMENT);
-                    //
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //textUltimaMedicion.setText("Animo: " + mood);
-                        }
-                    });
-                    //PROMEDIO
-                    stringPMood.add(mood);
-                    doublePSpeed.add(Double.parseDouble(stringSpeed));
-                    //
-                    //RECOVER DATE AND HOUR
-                    if (internet()) {
-                        booleanMoodMeasure = false;
-                        VolleyPetition(ip + stringID + "&var=" + "Mood" + "&valor=" + mood + "&fecha=" + dates()
-                                + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                "-"+"&latitude="+latitude+"&longitude="+longitude);
-                    } //else guardarDatos();
-                    //
-                } else if (intent.getAction().equals(BROADCAST_ACTION_HR_MEASUREMENT)) {
-                    booleanHrMeasure = true;
-                    hr = intent.getStringExtra(INTENT_KEY_HR_MEASUREMENT);
-                    Log.i("service123","hr" + hr);
-                    //
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            textUltimaMedicion.setText("Ritmo: " + hr);
-                        }
-                    });
-                    //PROMEDIO
-                    intPHr.add(Integer.parseInt(hr));
-                    doublePSpeed.add(Double.parseDouble(stringSpeed));
-                    //
-                    if (internet()) {
-                        booleanHrMeasure = false;
+                    //RESPIRACION
+                }
+                else if (!intent.getAction().equals(BROADCAST_ACTION_APPVERSION_MEASUREMENT)) {
+
+                    if (intent.getAction().equals(BROADCAST_ACTION_BP_MEASUREMENT)) {
+                        booleanBpMeasure = true;
+                        max = intent.getStringExtra(INTENT_KEY_BP_MEASUREMENT_MAX);
+                        min = intent.getStringExtra(INTENT_KEY_BP_MEASUREMENT_MIN);
                         //
-                        VolleyPetition(ip + stringID + "&var=" + "HR" + "&valor=" + hr + "&fecha=" + dates()
-                                + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
-                                hrDiagnostic(Integer.parseInt(hr))+"&latitude="+latitude+"&longitude="+longitude);
-                    } else guardarDatos();
-                    //SPEAK
-                    if (booleanSonido){
-                        mTts.speak("Tu ritmo cardiaco es " + hrDiagnostic(Integer.parseInt(hr)), 0, null, "hr");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textUltimaMedicion.setText("Presión: " + max + "/" + min);
+                            }
+                        });
+                        //
+                        //PROMEDIO
+                        intPBpmax.add(Integer.parseInt(max));
+                        intPBpmin.add(Integer.parseInt(min));
+                        doublePSpeed.add(Double.parseDouble(stringSpeed));
+                        //
+                        //
+                        if (internet()) {
+                            booleanBpMeasure = false;
+                            VolleyPetition(ip + stringID + "&var=" + "BPmax" + "&valor=" + max + "&fecha=" + dates()
+                                    + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
+                                    bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min)) + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+                            //
+                            VolleyPetition(ip + stringID + "&var=" + "BPmin" + "&valor=" + min + "&fecha=" + dates()
+                                    + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
+                                    bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min)) + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+                            //
+                        } else guardarDatos();
+                        //SPEAK
+                        if (booleanSonido) {
+                            mTts.speak("Tu presion es " + bpDiagnostic(Integer.parseInt(max), Integer.parseInt(min)),
+                                    0, null, "bp");
+                        }
+                        //
+                        //RESPIRACION
+                    }else if (intent.getAction().equals(BROADCAST_ACTION_BATTERY)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                bateria = (Integer.toString(intent.getIntExtra(INTENT_KEY_BATTERY, -1)));
+                            }
+                        });
                     }
-                    //
-                } else if (intent.getAction().equals(BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE)) {
-                    String message = intent.getStringExtra(INTENT_MEASUREMENT_WRITE_FAILURE);
-                    Toast.makeText(conduccion.this, message, Toast.LENGTH_LONG).show();
-                    Connector.getInstance().unbindDevice();
-                    booleanFalloConect = true;
-                    //
-                } else if (intent.getAction().equals(BROADCAST_ACTION_STEPS_MEASUREMENT)) {
-                    steps = intent.getStringExtra(INTENT_KEY_STEPS_MEASUREMENT);
-                    if (!steps.isEmpty()){
+                    //PRESION
+                    else if (intent.getAction().equals(BROADCAST_ACTION_BUTTON)) {
+                        Connector.getInstance().measureBP();
+
+
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_BR_MEASUREMENT)) {
+                        booleanBrMeasure = true;
+                        br = intent.getStringExtra(INTENT_KEY_BR_MEASUREMENT);
+                        //
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textUltimaMedicion.setText("Respiración: " + br);
+                            }
+                        });
+                        //
+                        //PROMEDIO
+                        intPBr.add(Integer.parseInt(br));
+                        doublePSpeed.add(Double.parseDouble(stringSpeed));
+                        //
+                        if (internet()) {
+                            booleanBrMeasure = false;
+                            //
+                            VolleyPetition(ip + stringID + "&var=" + "BR" + "&valor=" + br + "&fecha=" + dates()
+                                    + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
+                                    brDiagnostic(Integer.parseInt(br)) + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+                            //
+                        } else guardarDatos();
+                        //SPEAK
+                        if (booleanSonido) {
+                            mTts.speak("Tu respiracion es " + brDiagnostic(Integer.parseInt(br)), 0, null, "br");
+                        }
+                        //
+                        //FATIGA Y ANIMO
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_FATIGUE_MEASUREMENT)) {
+                        booleanFatigueMeasure = true;
+                        fatigue = intent.getStringExtra(INTENT_KEY_FATIGUE_MEASUREMENT);
+                        //
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (fatigue.equalsIgnoreCase("tired")) {
+                                    textUltimaMedicion.setText("Fatiga: Cansado");
+                                }
+                                if (fatigue.equalsIgnoreCase("Very_Tired")) {
+                                    textUltimaMedicion.setText("Fatiga: Muy cansado");
+                                }
+                            }
+                        });
+                        //
+                        //PROMEDIO
+                        stringPFatigue.add(fatigue);
+                        Log.i("service123", "Fatiga: " + stringPFatigue.get(0));
+                        doublePSpeed.add(Double.parseDouble(stringSpeed));
+                        //
+                        if (internet()) {
+                            booleanFatigueMeasure = false;
+                            VolleyPetition(ip + stringID + "&var=" + "Fatiga" + "&valor=" + fatigue + "&fecha=" + dates()
+                                    + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
+                                    "-" + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+                        } else guardarDatos();
+                        //
+                        //SPEAK
+                        if (booleanSonido) {
+                            if (fatigue.equalsIgnoreCase("tired") || fatigue.equalsIgnoreCase("Very_Tired")) {
+                                mTts.speak("Tu nivel de fatiga es cansado ", 0, null, "fatiga");
+                            } else mTts.speak("Tu nivel de fatiga es normal ", 0, null, "fatiga");
+                        }
+                        //
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_MOOD_MEASUREMENT)) {
+                        booleanMoodMeasure = true;
+                        mood = intent.getStringExtra(INTENT_KEY_MOOD_MEASUREMENT);
+                        //
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //textUltimaMedicion.setText("Animo: " + mood);
+                            }
+                        });
+                        //PROMEDIO
+                        stringPMood.add(mood);
+                        doublePSpeed.add(Double.parseDouble(stringSpeed));
+                        //
+                        //RECOVER DATE AND HOUR
+                        if (internet()) {
+                            booleanMoodMeasure = false;
+                            VolleyPetition(ip + stringID + "&var=" + "Mood" + "&valor=" + mood + "&fecha=" + dates()
+                                    + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
+                                    "-" + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+                        } //else guardarDatos();
+                        //
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_HR_MEASUREMENT)) {
+                        booleanHrMeasure = true;
+                        hr = intent.getStringExtra(INTENT_KEY_HR_MEASUREMENT);
+                        Log.i("service123", "hr" + hr);
+                        //
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textUltimaMedicion.setText("Ritmo: " + hr);
+                            }
+                        });
+                        //PROMEDIO
+                        intPHr.add(Integer.parseInt(hr));
+                        doublePSpeed.add(Double.parseDouble(stringSpeed));
+                        //
+                        if (internet()) {
+                            booleanHrMeasure = false;
+                            //
+                            VolleyPetition(ip + stringID + "&var=" + "HR" + "&valor=" + hr + "&fecha=" + dates()
+                                    + "&hora=" + hour() + "&velocidad=" + stringSpeed + "&diagnostico=" +
+                                    hrDiagnostic(Integer.parseInt(hr)) + "&latitude=" + latitude + "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+                        } else guardarDatos();
+                        //SPEAK
+                        if (booleanSonido) {
+                            mTts.speak("Tu ritmo cardiaco es " + hrDiagnostic(Integer.parseInt(hr)), 0, null, "hr");
+                        }
+                        //
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_MEASUREMENT_WRITE_FAILURE)) {
+                        String message = intent.getStringExtra(INTENT_MEASUREMENT_WRITE_FAILURE);
+                        Toast.makeText(conduccion.this, message, Toast.LENGTH_LONG).show();
+                        Connector.getInstance().unbindDevice();
+                        booleanFalloConect = true;
+                        //
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_STEPS_MEASUREMENT)) {
+                        steps = intent.getStringExtra(INTENT_KEY_STEPS_MEASUREMENT);
+                        if (!steps.isEmpty()) {
+                            textBle.setText(R.string.Conectado);
+                            textBle.setTextColor(Color.parseColor("#90EE90"));
+                        }
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_DISCONNECTED)) {
+                        textBle.setText(getString(R.string.tConexionDesconectado));
+                        textBle.setTextColor(Color.parseColor("#F44336"));
+                        mTts.speak(getString(R.string.DispositivoDesconectado), 0, null, "desconectado");
+                        vibrator.vibrate(800);
+                        //
+                        if (booleanCountDown) {
+                            booleanCountDown = false;
+                            countDownTimer.cancel();
+                        }
+                        //
+                        timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
+                        chronometer.stop();
+                        switch (intCount) {
+                            case 1:
+                                countDownTimerHr.cancel();
+                                break;
+                            case 2:
+                                countDownTimerBp.cancel();
+                                break;
+                            case 3:
+                                countDownTimerBr.cancel();
+                                break;
+                            case 4:
+                                countDownTimerMF.cancel();
+                                break;
+                            case 5:
+                                countDownTimerOx.cancel();
+                                break;
+                        }
+                        //bluetoothAdapter.disable();
+                        reconectar();
+                        //
+                        VolleyPetition(ip + stringID + "&var=" + "DESCONEXION" + "&valor=" + "DESCONEXION" + "&fecha=" + dates()
+                                + "&hora=" + hour() + "&velocidad=" + "DESCONEXION" + "&diagnostico=" + "DESCONEXION" + "&latitude=" + latitude +
+                                "&longitude=" + longitude + "&bateriacel=" + cargaBateria() + "&bateriabanda=" + bateria);
+                        //
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_CONNECTED)) {
+                        handlerReconect.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!booleanBonded) {
+                                    booleanBonded = false;
+                                    Log.i("service123", "entro a booleanBonded");
+                                    Connector.getInstance().unbindDevice();
+                                    booleanFalloConect = true;
+                                }
+                            }
+                        }, 3000);
+
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_BONDED)) {
+                        booleanBonded = true;
                         textBle.setText(R.string.Conectado);
                         textBle.setTextColor(Color.parseColor("#90EE90"));
-                    }
-                } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_DISCONNECTED)){
-                    textBle.setText(getString(R.string.tConexionDesconectado));
-                    textBle.setTextColor(Color.parseColor("#F44336"));
-                    mTts.speak(getString(R.string.DispositivoDesconectado),0,null,"desconectado");
-                    vibrator.vibrate(800);
-                    //
-                    if (booleanCountDown) {
-                        booleanCountDown = false;
-                        countDownTimer.cancel();
-                    }
-                    //
-                    timeWhenStopped = chronometer.getBase() - SystemClock.elapsedRealtime();
-                    chronometer.stop();
-                    switch (intCount){
-                        case 1: countDownTimerHr.cancel(); break;
-                        case 2: countDownTimerBp.cancel(); break;
-                        case 3: countDownTimerBr.cancel(); break;
-                        case 4: countDownTimerMF.cancel(); break;
-                    }
-                    //bluetoothAdapter.disable();
-                    reconectar();
-                    //
-                    VolleyPetition(ip + stringID + "&var=" + "DESCONEXION" + "&valor=" + "DESCONEXION" + "&fecha=" + dates()
-                            + "&hora=" + hour() + "&velocidad=" + "DESCONEXION" + "&diagnostico=" +"DESCONEXION"+"&latitude="+latitude+
-                            "&longitude="+longitude);
-                    //
-                } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_CONNECTED)){
-                    handlerReconect.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!booleanBonded){
-                                booleanBonded = false;
-                                Log.i("service123","entro a booleanBonded");
-                                Connector.getInstance().unbindDevice();
-                                booleanFalloConect = true;
+                        startcountDownTimer();
+                        startcountDownTimerHr();
+                        handlerVolverMedir.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Connector.getInstance().measureMF();
                             }
-                        }
-                    },3000);
+                        }, 600);
+                        chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
+                        chronometer.start();
 
-                }else if (intent.getAction().equals(BROADCAST_ACTION_HELO_BONDED)){
-                    booleanBonded = true;
-                    textBle.setText(R.string.Conectado);
-                    textBle.setTextColor(Color.parseColor("#90EE90"));
-                    startcountDownTimer();
-                    startcountDownTimerHr();
-                    handlerVolverMedir.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Connector.getInstance().measureMF();
-                        }
-                    },600);
-                    chronometer.setBase(SystemClock.elapsedRealtime() + timeWhenStopped);
-                    chronometer.start();
+                    } else if (intent.getAction().equals("enviado")) {
+                        intentService = new Intent(conduccion.this, serviceInternet.class);
+                        stopService(intentService);
+                        Log.i("service123", "envio mensaje");
+                        Notification terminar = new Notification.Builder(getApplicationContext())
+                                .setContentTitle("Administrador de cargas")
+                                .setSmallIcon(R.mipmap.fr)
+                                .setContentText("Datos guardados en la base de datos")
+                                .setAutoCancel(true).build();
+                        notificationManager.notify(1, terminar);
+                        booleanServiceStarted = false;
+                        contBp = contBr = contMood = contFatigue = contHr = 0;
+                        SharedPreferences.Editor spMeasuresSavedEditor = spMeasuresSaved.edit();
+                        spMeasuresSavedEditor.clear();
+                        spMeasuresSavedEditor.apply();
+                    } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_UNBONDED)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.i("service123", "UNBONDED");
+                                //
+                                if (booleanFalloConect) {
+                                    Log.i("service123", "entro a booleanFalloConect");
+                                    booleanFalloConect = false;
+                                    reconectar();
+                                }
+                            }
+                        });
+                    }
 
                 }
-                else if (intent.getAction().equals("enviado")){
-                    intentService = new Intent(conduccion.this,serviceInternet.class);
-                    stopService(intentService);
-                    Log.i("service123","envio mensaje");
-                    Notification terminar = new Notification.Builder(getApplicationContext())
-                            .setContentTitle("Administrador de cargas")
-                            .setSmallIcon(R.mipmap.fr)
-                            .setContentText("Datos guardados en la base de datos")
-                            .setAutoCancel(true).build();
-                    notificationManager.notify(1,terminar);
-                    booleanServiceStarted = false;
-                    contBp = contBr = contMood = contFatigue = contHr = 0;
-                    SharedPreferences.Editor spMeasuresSavedEditor = spMeasuresSaved.edit();
-                    spMeasuresSavedEditor.clear();
-                    spMeasuresSavedEditor.apply();
-                } else if (intent.getAction().equals(BROADCAST_ACTION_HELO_UNBONDED)) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Log.i("service123","UNBONDED");
-                            //
-                            if (booleanFalloConect){
-                                Log.i("service123","entro a booleanFalloConect");
-                                booleanFalloConect = false;
-                                reconectar();
-                            }
-                        }
-                    });
-                }
-
             }
         }
     }
